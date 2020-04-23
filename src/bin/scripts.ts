@@ -1,5 +1,5 @@
 import spawn from 'cross-spawn'
-import querystring from 'query-string'
+import querystring from 'querystring'
 import { getKeys } from '../util'
 import type { SpawnSyncReturns } from 'child_process'
 

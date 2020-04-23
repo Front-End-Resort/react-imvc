@@ -1,7 +1,7 @@
 import 'whatwg-fetch'
 import React from 'react'
 import Cookie from 'js-cookie'
-import querystring from 'query-string'
+import querystring from 'querystring'
 import { createStore } from 'relite'
 import { createHistory } from 'create-app/server'
 import { Actions as HistoryActions } from 'create-history'

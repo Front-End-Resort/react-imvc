@@ -17,9 +17,8 @@ export default function createExpressApp(config) {
 	let list = Array.isArray(config.basename)
 		? config.basename
 		: [config.basename || '']
-	list.forEach(basename => {
-		app.use(shareRoot(basename))
-	})
+
+	app.use(shareRoot(...list))
 
 	// handle helmet
 	if (config.helmet) {
@@ -139,6 +138,7 @@ export default function createExpressApp(config) {
 		let publicPath = config.publicPath || serverPublicPath
 		let defaultProps = {
 			...config,
+			initialState: undefined,
 			basename,
 			publicPath,
 			serverPublicPath

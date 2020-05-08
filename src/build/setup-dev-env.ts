@@ -79,7 +79,7 @@ export function setupServer(
 			}
 			let filePath = modulePath
 			if (
-				serverConfig.output !== undefined
+				serverConfig.output !== void 0
 					&& typeof serverConfig.output.path === 'string'
 			) {
 				filePath = path.join(serverConfig.output.path, modulePath)

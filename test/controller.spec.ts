@@ -582,4 +582,87 @@ describe('controller', () => {
   describe('render', () => {
     it.todo('valid')
   })
+
+  describe('es6 import', () => {
+    describe('import with loader', () => {
+      it('should render in server side', async () => {
+        const page = await browser.newPage()
+        const url = `http://localhost:${config.port}/es6_import`
+        await page.goto(url)
+        await page.waitFor('#es6_import')
+        
+        const serverContent = await fetchContent(url)
+        expect(serverContent.includes('es6 import content')).toBeTruthy()
+
+        await page.close()
+      })
+
+      it('should render in client side', async () => {
+        const page = await browser.newPage()
+        const url = `http://localhost:${config.port}/es6_import`
+        await page.goto(url)
+        await page.waitFor('#es6_import')
+        
+        const clientContent = await page.$eval('#es6_import',
+            (e) => e.innerHTML)
+        expect(clientContent.includes('es6 import content')).toBeTruthy()
+
+        await page.close()
+      })
+    })
+
+    describe('import without loader', () => {
+      it('should render in server side', async () => {
+        const page = await browser.newPage()
+        const url = `http://localhost:${config.port}/es6_module`
+        await page.goto(url)
+        await page.waitFor('#es6_module')
+        
+        const serverContent = await fetchContent(url)
+        expect(serverContent.includes('es6 module content')).toBeTruthy()
+
+        await page.close()
+      })
+
+      it('should render in client side', async () => {
+        const page = await browser.newPage()
+        const url = `http://localhost:${config.port}/es6_module`
+        await page.goto(url)
+        await page.waitFor('#es6_module')
+        
+        const clientContent = await page.$eval('#es6_module',
+            (e) => e.innerHTML)
+        expect(clientContent.includes('es6 module content')).toBeTruthy()
+
+        await page.close()
+      })
+    })
+
+    describe('dynamic import without loader', () => {
+      it('should render in server side', async () => {
+        const page = await browser.newPage()
+        const url = `http://localhost:${config.port}/es6_dynamic`
+        await page.goto(url)
+        await page.waitFor('#es6_dynamic')
+        
+        const serverContent = await fetchContent(url)
+        expect(serverContent.includes('es6 dynamic content')).toBeTruthy()
+
+        await page.close()
+      })
+
+      it('should render in client side', async () => {
+        const page = await browser.newPage()
+        const url = `http://localhost:${config.port}/es6_dynamic`
+        await page.goto(url)
+        await page.waitFor('#es6_dynamic')
+        
+        const clientContent = await page.$eval('#es6_dynamic',
+            (e) => e.innerHTML)
+        expect(clientContent.includes('es6 dynamic content')).toBeTruthy()
+
+        await page.close()
+      })
+    })
+  })
 })

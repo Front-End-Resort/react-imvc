@@ -1,6 +1,6 @@
 {
   "name": "react-imvc",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "An Isomorphic MVC Framework",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -53,7 +53,6 @@
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
     "@babel/plugin-proposal-pipeline-operator": "^7.8.3",
     "@babel/plugin-proposal-throw-expressions": "^7.8.3",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-syntax-import-meta": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-react": "^7.9.1",

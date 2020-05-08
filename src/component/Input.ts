@@ -41,7 +41,7 @@ export default class Input extends React.Component<InputProps> {
 
 		let path = check ? `${name}.value` : name
 
-		if (value === undefined) {
+		if (value === void 0) {
 			value = getValueByPath(state, path)
 		}
 

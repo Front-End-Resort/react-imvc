@@ -278,7 +278,7 @@ export default function createWebpackConfig(
 		resolve: resolveConfig,
 		context: root,
 		resolveLoader: resolveLoaderConfig,
-		externals: isServer ? getExternals(config) : undefined
+		externals: isServer ? getExternals(config) : void 0
 	})
 
 	if (!!config.webpack) {

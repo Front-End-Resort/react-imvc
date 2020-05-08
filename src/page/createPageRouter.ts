@@ -8,7 +8,9 @@ import Controller from '../controller'
 import {
   getFlatList,
   getClearFilePath,
-  stringToUnit8Array
+  stringToUnit8Array,
+  isThenable,
+  isIMVCController
 } from '../util'
 import type {
   HistoryLocation,
@@ -28,16 +30,27 @@ function getModule(module: any) {
   return module.default || module
 }
 function commonjsLoader(
-  controller: LoadController,
+  controller: LoadController | Controller<any, any>,
   location?: HistoryLocation,
   context?: Context
 ): ControllerConstructor | Promise<ControllerConstructor> {
-  return (
-    controller(
+  let ctrl = null
+  if (isIMVCController(controller) || isThenable(controller)) {
+    ctrl = controller
+  } else {
+    ctrl = controller(
       location,
       context
-    ) as Promise<ControllerConstructor>
-  ).then(getModule)
+    )
+  }
+
+  if (isThenable(ctrl)) {
+    return (
+      ctrl as Promise<ControllerConstructor>
+    ).then(getModule)
+  } else {
+    return getModule(ctrl)
+  }
 }
 
 /**
@@ -56,7 +69,7 @@ function renderToNodeStream(
       resolve(Buffer.from(stringToUnit8Array(view)))
     })
   }
-  if (view === undefined || view === null) {
+  if (view === void 0 || view === null) {
     return new Promise<ArrayBuffer>((resolve, reject) => {
       resolve(Buffer.from(stringToUnit8Array('')))
     })
@@ -98,7 +111,7 @@ function renderToString(
   if (typeof view === 'string') {
     return view
   }
-  if (view === undefined || view === null) {
+  if (view === void 0 || view === null) {
     return ''
   }
 
@@ -231,8 +244,8 @@ export default function createPageRouter(options: EntireConfig) {
 
       let initialState = controller.store
         ? controller.store.getState()
-        : undefined
-      let htmlConfigs = initialState ? initialState.html : undefined
+        : void 0
+      let htmlConfigs = initialState ? initialState.html : void 0
       let data = {
         ...htmlConfigs,
         content,

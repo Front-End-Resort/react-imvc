@@ -12,7 +12,7 @@ export function getExternals(config: EntireConfig): string[] {
 
   while (true) {
     let item = list.shift()
-    if (item === undefined) {
+    if (item === void 0) {
       break
     }
 

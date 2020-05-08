@@ -1,4 +1,5 @@
 import type { Route } from 'create-app/client'
+import type Controller from '../controller'
 
 export type RouteList = Route[]
 export type inputList = (Route | RouteList)[]
@@ -166,4 +167,8 @@ export function getClearFilePath(
 
 export function compareObject(a: object, b: object): boolean {
   return JSON.stringify(a) === JSON.stringify(b)
+}
+
+export function isIMVCController(fn: any): fn is Controller<any, any> {
+  return fn.__SYMBOL === 'REACT_IMVC_CONTROLLER'
 }

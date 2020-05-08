@@ -155,10 +155,15 @@ export default class Controller<
     this.deepCloneInitialState = true
 
     // For TypeScript placeholder
-    this.store = undefined as unknown as Store<S & BaseState, BaseActions & AS>
+    this.store = void 0 as unknown as Store<S & BaseState, BaseActions & AS>
     this.history = (
       createHistory() as unknown as HistoryWithBFOL<BLWithBQ, ILWithBQ>
     )
+  }
+  
+  // symbol of react-imvc controller
+  static get __SYMBOL() {
+    return 'REACT_IMVC_CONTROLLER'
   }
   
   /**
@@ -530,7 +535,7 @@ export default class Controller<
                   displayName as string,
                   InputComponent
                 )
-                if (result !== undefined) return result
+                if (result !== void 0) return result
               }
               return null
             }
@@ -612,8 +617,8 @@ export default class Controller<
     // 如果 Model 存在，且 initialState 和 actions 不存在，从 Model 里解构出来
     if (
       this.Model
-        && this.initialState === undefined
-          && this.actions === undefined
+        && this.initialState === void 0
+          && this.actions === void 0
     ) {
       let { initialState: initState, ...acts } = this.Model
       initialState = this.initialState = initState
@@ -625,7 +630,7 @@ export default class Controller<
     // 服务端把 initialState 吐在 html 里的全局变量 __INITIAL_STATE__ 里
     if (typeof __INITIAL_STATE__ !== 'undefined') {
       globalInitialState = __INITIAL_STATE__
-      __INITIAL_STATE__ = undefined
+      __INITIAL_STATE__ = void 0
     }
 
     if (typeof initialState === 'object' && this.deepCloneInitialState) {
@@ -827,9 +832,9 @@ export default class Controller<
     if (this.context.isServer) return
     let ctrl: this = Object.create(this)
     ctrl.View = View
-    ctrl.componentDidFirstMount = undefined
-    ctrl.componentDidMount = undefined
-    ctrl.componentWillUnmount = undefined
+    ctrl.componentDidFirstMount = void 0
+    ctrl.componentDidMount = void 0
+    ctrl.componentWillUnmount = void 0
     if (this.proxyHandler) {
       this.proxyHandler.attach()
     }

@@ -1,3 +1,6 @@
+import ES6_Import from './es6_import/Controller'
+import ES6_Module from './es6_module/Controller'
+
 export default [
 	{
 		path: '/static_view',
@@ -90,5 +93,17 @@ export default [
 	{
 		path: '/getInitialState',
 		controller: () => import('./getInitialState/Controller')
+	},
+	{
+		path: '/es6_import',
+		controller: () => ES6_Import
+	},
+	{
+		path: '/es6_module',
+		controller: ES6_Module
+	},
+	{
+		path: '/es6_dynamic',
+		controller: import('./es6_dynamic/Controller')
 	}
 ]

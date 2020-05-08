@@ -187,7 +187,7 @@ function normalizePort(val: string | number): string | number | undefined {
 		return port
 	}
 
-	return undefined
+	return void 0
 }
 
 function hasModuleFile(filename: string): boolean {

@@ -31,8 +31,8 @@ const defaultConfig: EntireConfig = {
 	restapi: '',
 	content: '',
 	context: {},
-	initialState: undefined,
-	appSettings: undefined,
+	initialState: void 0,
+	appSettings: void 0,
 
 	SSR: true,
 	renderMode: 'renderToNodeStream',

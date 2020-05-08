@@ -10,7 +10,7 @@ let query = querystring.parse(paramsStr)
 let params = getKeys(query).map(key => {
   return query[key] ? `--${key}=${query[key]}` : `--${key}`
 })
-let result: SpawnSyncReturns<Buffer> | undefined = undefined
+let result: SpawnSyncReturns<Buffer> | undefined = void 0
 
 switch (script) {
   case 'build':

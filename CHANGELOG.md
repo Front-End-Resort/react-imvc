@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.0.1
+
+* **perf**: replace query-string of querystring
+* **ci**: remove babel-plugin-dynamic-import-node dependence
+* **style**: remove @babel/plugin-syntax-dynamic-import dependence, it defaultly installed in @babel/preset-env
+
 ## 3.0.0
 
 * **refactor**: support for [Typescript](http://www.typescriptlang.org/docs/home.html)(More details are in [guidance of migration](./doc/MIGRATION.md)).

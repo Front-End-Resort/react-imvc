@@ -103,7 +103,7 @@
     "resolve": "^1.15.1",
     "serve-favicon": "^2.5.0",
     "terser-webpack-plugin": "^2.3.5",
-    "typescript": "^3.8.3",
+    "typescript": "^3.9.2",
     "webpack": "^4.42.0",
     "webpack-bundle-analyzer": "^3.6.1",
     "webpack-dev-middleware": "^3.7.2",

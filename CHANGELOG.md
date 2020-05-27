@@ -1,12 +1,39 @@
 # CHANGELOG
 
-## 3.0.1
+## 3.0.2（2020/5/8）
+
+* **feat**: support four way to import Controller in routes.
+  ```js
+  // src/pages/index.ts
+  import ES6_Module from './es6_module/Controller'
+
+  export default [
+          {
+      path: '/es6_dynamic_loader',
+      controller: () => import('./es6_module/Controller')
+    },
+    {
+      path: '/es6_loader',
+      controller: () => ES6_Import
+    },
+    {
+      path: '/es6_module',
+      controller: ES6_Module
+    },
+    {
+      path: '/es6_dynamic',
+      controller: import('./es6_module/Controller')
+    }
+  ]
+  ```
+
+## 3.0.1（2020/4/23）
 
 * **perf**: replace query-string of querystring
 * **ci**: remove babel-plugin-dynamic-import-node dependence
 * **style**: remove @babel/plugin-syntax-dynamic-import dependence, it defaultly installed in @babel/preset-env
 
-## 3.0.0
+## 3.0.0（2020/4/10）
 
 * **refactor**: support for [Typescript](http://www.typescriptlang.org/docs/home.html)(More details are in [guidance of migration](./doc/MIGRATION.md)).
 

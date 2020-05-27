@@ -108,6 +108,7 @@ export interface Meta {
   viewId: number
   isDestroyed: boolean
   unsubscribeList: any
+  isInitializing: boolean
 }
 
 export interface BaseViewFC extends React.FC<ViewPropsType> {

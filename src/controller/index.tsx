@@ -138,7 +138,8 @@ export default class Controller<
       viewId: Date.now(),
       isDestroyed: false,
       hadMounted: false, // change by ControllerProxy
-      unsubscribeList: []
+      unsubscribeList: [],
+      isInitializing: false
     }
     /**
      * 将 location.key 赋值给 this.meta 并在 location 里删除
@@ -401,6 +402,9 @@ export default class Controller<
         window.location.replace(redirectUrl)
       } else {
         history.replace(redirectUrl)
+        if (this.meta.isInitializing) {
+          throw REDIRECT
+        }
       }
     }
   }
@@ -565,6 +569,7 @@ export default class Controller<
       this.proxyHandler = { attach, detach }
     }
     try {
+      this.meta.isInitializing = true
       return await this.initialize()
     } catch (error) {
       if (error === REDIRECT) return null
@@ -573,6 +578,8 @@ export default class Controller<
         return this.getViewFallback() || <EmptyView />
       }
       throw error
+    } finally {
+      this.meta.isInitializing = false
     }
   }
 

@@ -1,10 +1,9 @@
 # 介绍
 
 [![License](https://img.shields.io/npm/v/react-imvc.svg)](https://www.npmjs.com/package/react-imvc)
-[![Build Status](https://travis-ci.org/tqma113/react-imvc.svg?branch=master)](https://travis-ci.org/Lucifier129/react-imvc)
-[![codecov](https://img.shields.io/codecov/c/gh/tqma113/react-imvc)](https://codecov.io/gh/tqma113/react-imvc)
+[![Action Status](https://github.com/Front-End-Resort/react-imvc/workflows/IMVC/badge.svg)](https://github.com/Front-End-Resort/react-imvc/actions)
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://www.npmjs.com/package/react-imvc)
-[![PRs-welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Lucifier129/react-imvc/pull/new/master)
+[![PRs-welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Front-End-Resort/react-imvc/pull/new/master)
 
 **React-IMVC** 是 Isomorphic MVC 的 [React](https://reactjs.org/) 实现，它是一个 [Web 框架](https://en.wikipedia.org/wiki/Web_framework)。通过 **React-IMVC**，我们可以更便利地实现同构 [Web 应用](https://en.wikipedia.org/wiki/Web_application) 的开发。
 

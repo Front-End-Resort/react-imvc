@@ -1,6 +1,6 @@
 # Migration from 2.x to 3.x
 
-## What' new
+## What's new
 
 * Support for Typescript. Intact intelligent code completion.
 
@@ -348,7 +348,9 @@ class Controller {
 
 * Props of `View` have changed from `state, handlers, actions` to `state, actions, ctrl`.
 
-* Not support async actions any more.
+* Remove plugins for resolving `.gif/.png/.jpg` files.
+
+* Nomore support async *Action*, only support sync *Action*.
 
 ## Dependence change
 
@@ -370,7 +372,7 @@ class Controller {
 * terser-webpack-plugin 1.1.0 -> 1.3.0
 * yargs 8.0.2 -> 13.3.0
 
-### Add
+### Addition
 
 * @types/babel-core 6.25.6
 * @types/body-parser 1.17.0
@@ -407,7 +409,7 @@ class Controller {
 * @types/yargs 13.0.1
 * fs-extra 8.1.0
 
-### Delete
+### Remove
 
 * expect 1.20.2
 * mocha 3.0.2

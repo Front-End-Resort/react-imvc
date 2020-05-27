@@ -1,8 +1,7 @@
 # React-IMVC
 
 [![License](https://img.shields.io/npm/v/react-imvc.svg)](https://www.npmjs.com/package/react-imvc)
-[![Action Status](https://github.com/Front-End-Resort/react-imvc/workflows/IMVC/badge.svg)](https://travis-ci.org/Lucifier129/react-imvc)
-[![codecov](https://img.shields.io/codecov/c/gh/Front-End-Resort/react-imvc)](https://codecov.io/gh/tqma113/react-imvc)
+[![Action Status](https://github.com/Front-End-Resort/react-imvc/workflows/IMVC/badge.svg)](https://github.com/Front-End-Resort/react-imvc/actions)
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://www.npmjs.com/package/react-imvc)
 [![PRs-welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Front-End-Resort/react-imvc/pull/new/master)
 

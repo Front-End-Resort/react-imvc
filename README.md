@@ -1,18 +1,20 @@
 # React-IMVC
 
 [![License](https://img.shields.io/npm/v/react-imvc.svg)](https://www.npmjs.com/package/react-imvc)
-[![Build Status](https://travis-ci.org/tqma113/react-imvc.svg?branch=master)](https://travis-ci.org/Lucifier129/react-imvc)
-[![codecov](https://img.shields.io/codecov/c/gh/tqma113/react-imvc)](https://codecov.io/gh/tqma113/react-imvc)
+[![Action Status](https://github.com/Front-End-Resort/react-imvc/workflows/All/badge.svg)](https://travis-ci.org/Lucifier129/react-imvc)
+[![codecov](https://img.shields.io/codecov/c/gh/Front-End-Resort/react-imvc)](https://codecov.io/gh/tqma113/react-imvc)
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://www.npmjs.com/package/react-imvc)
-[![PRs-welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Lucifier129/react-imvc/pull/new/master)
+[![PRs-welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Front-End-Resort/react-imvc/pull/new/master)
 
 [![NPM](https://nodei.co/npm/react-imvc.png?downloads=true)](https://nodei.co/npm/react-imvc/)
 
-## [3.0 升级指南](./doc/MIGRATION.md)
+## [3.0 文档](./doc/README.md)
 
-## [2.0 升级指南](./doc/upgrade.md)
+## [3.0 升级指南](./doc/MIGRATION_V3.md)
 
-## [1.0 仓库和文档地址](https://github.com/Lucifier129/react-imvc/tree/v1.0)
+## [2.0 升级指南](./doc/MIGRATION_V2.md)
+
+## [1.0 文档](./doc/README.OLD.md)
 
 MVC 三者都是 Isomorphic，既是服务端 MVC，也是浏览器端 MVC。
 

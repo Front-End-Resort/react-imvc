@@ -6,7 +6,6 @@ import express from "express"
 import favicon from "serve-favicon"
 import bodyParser from "body-parser"
 import compression from "compression"
-import querystring from "querystring"
 import cookieParser from "cookie-parser"
 import configBabel from "../config/babel"
 import shareRoot from "../middleware/shareRoot"
@@ -98,15 +97,12 @@ export default function createExpressApp(
 
 		// 添加热更新中间件
 		if (config.hot) {
-			const whmConfig = {
-				quiet: true,
-				noInfo: true
-			}
+			const webpackHotMiddleware = require(`webpack-hot-middleware`)
 			app.use(
-				require(`webpack-hot-middleware?${querystring.stringify(
-					whmConfig
-				)}`)(compiler, {
-					log: false
+				webpackHotMiddleware(compiler, {
+					log: false,
+					quiet: true,
+					noInfo: true
 				})
 			)
 		}

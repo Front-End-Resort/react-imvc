@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 3.0.7
+
+* **fix**: config `hot: true` open HotModuleReplacementPlugin when build
+
+## 3.0.6
+
+> 2020/5/28
+
+* **fix**: open webpack-hot-middleware when build
+
+## 3.0.5
+
+> 2020/5/28
+
+* **fix**: controller ErrorBoundary hasError field error
+
 ## 3.0.4
 
 > 2020/5/28

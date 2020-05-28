@@ -57,10 +57,6 @@ const EmptyView = <Ctrl extends Controller<any, any>>(props?: {
 }) => null
 
 let uid = 0 // seed of controller id
-// fixed: webpack rebuild lost original React.createElement
-// @ts-ignore
-let createElement = React.originalCreateElement || React.createElement
-
 
 /**
  * 绑定 Store 到 View
@@ -478,95 +474,7 @@ export default class Controller<
 
   async init() {
     if (this.errorDidCatch || this.getComponentFallback) {
-      let self = this
-      let isAttach = false
-      let attach = () => {
-        if (isAttach) return
-        isAttach = true
-        React.createElement = (type: any, ...args: any[]) => {
-          if (typeof type === 'function') {
-            if (!type.isErrorBoundary) {
-              type = createErrorBoundary(type)
-            }
-          }
-          return createElement(type, ...args)
-        }
-        // @ts-ignore
-        React.originalCreateElement = createElement
-      }
-      let detach = () => {
-        isAttach = false
-        React.createElement = createElement
-      }
-      let map = new Map()
-      let createErrorBoundary = (
-        InputComponent: React.ComponentType & { ignoreErrors: boolean }
-      ) => {
-        if (!InputComponent) return InputComponent
-
-        if (InputComponent.ignoreErrors) return InputComponent
-
-        if (map.has(InputComponent)) {
-          return map.get(InputComponent)
-        }
-
-        const displayName = InputComponent.name || InputComponent.displayName
-
-        interface ErrorBoundaryProps {
-          forwardedRef?: any
-        }
-        class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
-          static displayName = `ErrorBoundary(${displayName})`
-          static isErrorBoundary = true
-
-          state: Partial<BaseState> = {
-            hasError: false
-          }
-
-          static getDerivedStateFromError() {
-            return { hasError: true }
-          }
-
-          componentDidCatch(error: Error) {
-            if (typeof self.errorDidCatch === 'function') {
-              self.errorDidCatch(error, 'view')
-            }
-          }
-          render() {
-            if (self.store.getState().hasError) {
-              if (self.getComponentFallback) {
-                let result = self.getComponentFallback(
-                  displayName as string,
-                  InputComponent
-                )
-                if (result !== void 0) return result
-              }
-              return null
-            }
-            let { forwardedRef, ...rest } = this.props
-            return createElement(
-              InputComponent,
-              { ...rest, ref: forwardedRef }
-            )
-          }
-        }
-
-        let Forwarder: Forwarder = React.forwardRef((props, ref) => {
-          return createElement(ErrorBoundary, { ...props, forwardedRef: ref })
-        })
-
-        /**
-         * 同步 InputComponent 的静态属性/方法，一些 UI 框架，如 Ant-Design 
-         * 依赖静态属性/方法去判断组件类型
-         */
-        Object.assign(Forwarder, InputComponent)
-        Forwarder.isErrorBoundary = true
-        map.set(InputComponent, Forwarder)
-
-        return Forwarder
-      }
-
-      this.proxyHandler = { attach, detach }
+      this.proxyHandler = proxyReactCreateElement(this)
     }
     try {
       this.meta.isInitializing = true
@@ -852,4 +760,99 @@ export default class Controller<
     if (this.proxyHandler) this.proxyHandler.attach()
     return <ViewManager controller={this} />
   }
+}
+
+// fixed: webpack rebuild lost original React.createElement
+// @ts-ignore
+const createElement = React.originalCreateElement || React.createElement
+
+function proxyReactCreateElement(ctrl: Controller<any, any>) {
+  let isAttach = false
+  const attach = () => {
+    if (isAttach) return
+    isAttach = true
+    React.createElement = (type: any, ...args: any[]) => {
+      if (typeof type === 'function') {
+        if (!type.isErrorBoundary) {
+          type = createErrorBoundary(type)
+        }
+      }
+      return createElement(type, ...args)
+    }
+    // @ts-ignore
+    React.originalCreateElement = createElement
+  }
+  const detach = () => {
+    isAttach = false
+    React.createElement = createElement
+  }
+  const map = new Map()
+  const createErrorBoundary = (
+    InputComponent: React.ComponentType & { ignoreErrors: boolean }
+  ) => {
+    if (!InputComponent) return InputComponent
+
+    if (InputComponent.ignoreErrors) return InputComponent
+
+    if (map.has(InputComponent)) {
+      return map.get(InputComponent)
+    }
+
+    const displayName = InputComponent.name || InputComponent.displayName
+
+    interface ErrorBoundaryProps {
+      forwardedRef?: any
+    }
+    class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+      static displayName = `ErrorBoundary(${displayName})`
+      static isErrorBoundary = true
+
+      state: Partial<BaseState> = {
+        hasError: false
+      }
+
+      static getDerivedStateFromError() {
+        return { hasError: true }
+      }
+
+      componentDidCatch(error: Error) {
+        if (typeof ctrl.errorDidCatch === 'function') {
+          ctrl.errorDidCatch(error, 'view')
+        }
+      }
+      render() {
+        if (this.state.hasError) {
+          if (ctrl.getComponentFallback) {
+            let result = ctrl.getComponentFallback(
+              displayName as string,
+              InputComponent
+            )
+            if (result !== void 0) return result
+          }
+          return null
+        }
+        let { forwardedRef, ...rest } = this.props
+        return createElement(
+          InputComponent,
+          { ...rest, ref: forwardedRef }
+        )
+      }
+    }
+
+    const Forwarder: Forwarder = React.forwardRef((props, ref) => {
+      return createElement(ErrorBoundary, { ...props, forwardedRef: ref })
+    })
+
+    /**
+     * 同步 InputComponent 的静态属性/方法，一些 UI 框架，如 Ant-Design 
+     * 依赖静态属性/方法去判断组件类型
+     */
+    Object.assign(Forwarder, InputComponent)
+    Forwarder.isErrorBoundary = true
+    map.set(InputComponent, Forwarder)
+
+    return Forwarder
+  }
+
+  return { attach, detach }
 }

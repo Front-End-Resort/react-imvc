@@ -15,22 +15,24 @@ export default function createWebpackConfig(
 	isServer: boolean = false
 ): webpack.Configuration {
 	let result: webpack.Configuration = {}
-	let config: EntireConfig = Object.assign({}, options)
-	let root: string = path.join(config.root, config.src)
-	let alias = Object.assign({}, config.alias, {
+
+	const config: EntireConfig = Object.assign({}, options)
+	const root: string = path.join(config.root, config.src)
+	const alias = Object.assign({}, config.alias, {
 		'@routes': root
 	})
-	let indexEntry = isServer ? root : path.join(__dirname, '../entry/client')
-	let NODE_ENV = process.env.NODE_ENV
-	let isProd = NODE_ENV === 'production'
-	let mode = NODE_ENV === 'test' ? 'development' : NODE_ENV || 'production'
-	let entry = Object.assign({}, config.entry, {
+	const indexEntry = isServer ? root : path.join(__dirname, '../entry/client')
+	const NODE_ENV = process.env.NODE_ENV
+	const isProd = NODE_ENV === 'production'
+	const isDev = NODE_ENV === 'development'
+	const mode = NODE_ENV === 'test' ? 'development' : NODE_ENV || 'production'
+	const entry = Object.assign({}, config.entry, {
     index: [
       !!config.hot && !isServer && "webpack-hot-middleware/client",
       indexEntry
     ].filter(Boolean)
   })
-	let devtoolModuleFilenameTemplate = (
+	const devtoolModuleFilenameTemplate = (
     info: webpack.DevtoolModuleFilenameTemplateInfo
   ) => path.relative(root, info.absoluteResourcePath).replace(/\\/g, "/")
 
@@ -70,7 +72,7 @@ export default function createWebpackConfig(
 		}
 		return file
 	}
-	let ManifestPluginOption: ManifestPlugin.Options = {
+	const ManifestPluginOption: ManifestPlugin.Options = {
 		fileName: config.assetsPath,
 		map: ManifestPluginMap
 	}
@@ -108,7 +110,7 @@ export default function createWebpackConfig(
 	].filter(Boolean)
 
 	// 添加热更新插件
-	if (!isServer && config.hot) {
+	if (isDev && !isServer && config.hot) {
 		plugins.push(new webpack.HotModuleReplacementPlugin())
 	}
 
@@ -117,7 +119,7 @@ export default function createWebpackConfig(
 	}
 
 	let watch = NODE_ENV !== 'test'
-	let postLoaders: webpack.Rule[] = []
+	const postLoaders: webpack.Rule[] = []
 	let optimization: webpack.Options.Optimization = {
 		// Automatically split vendor and commons
 		// https://twitter.com/wSokra/status/969633336732905474

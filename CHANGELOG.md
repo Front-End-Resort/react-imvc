@@ -2,6 +2,8 @@
 
 ## 3.0.7
 
+> 2020/5/28
+
 * **fix**: config `hot: true` open HotModuleReplacementPlugin when build
 
 ## 3.0.6

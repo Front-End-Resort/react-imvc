@@ -7,13 +7,16 @@
 
 [![NPM](https://nodei.co/npm/react-imvc.png?downloads=true)](https://nodei.co/npm/react-imvc/)
 
+## [更新记录](./CHANGELOG.md)
+
 ## [3.0 文档](./doc/README.md)
 
 ## [3.0 升级指南](./doc/MIGRATION_V3.md)
 
+## [2.0 文档](./doc/README.V2.md)
+
 ## [2.0 升级指南](./doc/MIGRATION_V2.md)
 
-## [1.0 文档](./doc/README.OLD.md)
 
 MVC 三者都是 Isomorphic，既是服务端 MVC，也是浏览器端 MVC。
 
@@ -21,9 +24,9 @@ react-imvc 是 isomorphic mvc 的 react 实现，它是一个 Web 框架。通�
 
 用法示例：
 
-- isomorphic-cnode [源代码地址](https://github.com/tqma113/isomorphic-cnode)
-- react-imvc-todo [源码地址](https://github.com/tqma113/react-imvc-todo)
-- react-imvc-example [源码地址](https://github.com/tqma113/react-imvc-example)
+- isomorphic-cnode [源代码地址](https://github.com/Front-End-Resort/isomorphic-cnode)
+- react-imvc-todo [源码地址](https://github.com/Front-End-Resort/react-imvc-todo)
+- react-imvc-example [源码地址](https://github.com/Front-End-Resort/react-imvc-example)
 
 [点击访问详细文档地址：Documents](./doc/index.md)
 
@@ -109,12 +112,12 @@ function View() {
 
 ## Wiki
 
-[Wiki](https://github.com/tqma113/react-imvc/wiki)
+[Wiki](https://github.com/Front-End-Resort/react-imvc/wiki)
 
 ## 欢迎提 Issue 和 Pull Request
 
-[issue](https://github.com/tqma113/react-imvc/issue) | [PR](https://github.com/tqma113/react-imvc/pulls)
+[issue](https://github.com/Front-End-Resort/react-imvc/issue) | [PR](https://github.com/Front-End-Resort/react-imvc/pulls)
 
 ## License
 
-[MIT](https://github.com/tqma113/react-imvc/blob/master/LICENSE)
+[MIT](https://github.com/Front-End-Resort/react-imvc/blob/master/LICENSE)

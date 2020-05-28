@@ -4,6 +4,7 @@ import MFS from 'memory-fs'
 import webpack from 'webpack'
 import notifier from 'node-notifier'
 import webpackDevMiddleware from 'webpack-dev-middleware'
+import nodeExternals from 'webpack-node-externals'
 import createWebpackConfig from './createWebpackConfig'
 import { getExternals, matchExternals } from './util'
 import type { NextHandleFunction } from 'connect'
@@ -44,11 +45,16 @@ export function setupServer(
 	options: SetupServerOptions
 ): void {
 	let serverConfig = createWebpackConfig(config, true)
-	serverConfig.target = 'node'
+
 	serverConfig.entry = {
 		routes: path.join(config.root, config.src)
 	}
-	let externals = (serverConfig.externals = getExternals(config))
+
+	// in order to ignore built-in modules like path, fs, etc.
+	serverConfig.target = 'node'
+	// in order to ignore all modules in node_modules folder
+	serverConfig.externals = [nodeExternals()]
+
 	if (!serverConfig.output) {
 		serverConfig.output = {
 			filename: 'routes.js',
@@ -59,6 +65,8 @@ export function setupServer(
 		serverConfig.output.libraryTarget = 'commonjs2'
 	}
 	delete serverConfig.optimization
+	
+	let externals = getExternals(config)
 	let serverCompiler = webpack(serverConfig)
 	let mfs = new MFS()
 	let outputPath = path.join(

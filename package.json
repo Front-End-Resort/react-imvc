@@ -1,6 +1,6 @@
 {
   "name": "react-imvc",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "An Isomorphic MVC Framework",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -109,6 +109,7 @@
     "webpack-dev-middleware": "^3.7.2",
     "webpack-hot-middleware": "^2.25.0",
     "webpack-manifest-plugin": "^2.2.0",
+    "webpack-node-externals": "^1.7.2",
     "whatwg-fetch": "^2.0.4",
     "yargs": "^15.3.1"
   },
@@ -145,6 +146,7 @@
     "@types/webpack-bundle-analyzer": "^2.13.3",
     "@types/webpack-hot-middleware": "^2.25.0",
     "@types/webpack-manifest-plugin": "^2.1.0",
+    "@types/webpack-node-externals": "^1.7.1",
     "fetch-mock": "^9.2.1",
     "lodash": "^4.17.15",
     "puppeteer": "^2.1.1",

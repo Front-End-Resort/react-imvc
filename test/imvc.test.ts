@@ -68,12 +68,14 @@ describe('React-IMVC', () => {
 		let server: Server
 		let browser: puppeteer.Browser
 
-		beforeAll(async () => {
-			await start({ config }).then((result) => {
+		beforeAll(() => {
+			return start({ config })
+			.then((result) => {
 				app = result.app
 				server = result.server
 				return puppeteer.launch()
-			}).then((brws) => {
+			})
+			.then((brws) => {
 				browser = brws
 			})
 		})

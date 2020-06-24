@@ -21,7 +21,6 @@
     "removeComments": false,
     "jsx": "react",
     "lib": ["esnext", "dom.iterable", "dom"],
-    "types": ["jest", "node"],
     "rootDir": "./src"
   },
   "include": [

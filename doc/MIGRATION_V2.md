@@ -152,7 +152,7 @@ react-imvc v2.x 里，assets.js 里除了 vendor 和 index 是固定不变的，
 
 ### 修改的原因和目的
 
-webpack v4.x 里使用 `dynamic import` 语法异步加载文件，默认情况下，模块名是动态的数字。可以通过[注释(/* webpackChunkName: "lodash" */)](https://webpack.js.org/guides/code-splitting/#dynamic-imports)的方式指定名称。但在构建 assets.json 时，不保证能拿到准确的名字。
+webpack v4.x 里使用 `dynamic import` 语法异步加载文件，默认情况下，模块名是动态的数字。可以通过[注释(/* webpackChunkName: "foo" */)](https://webpack.js.org/guides/code-splitting/#dynamic-imports)的方式指定名称。但在构建 assets.json 时，不保证能拿到准确的名字。
 
 ### 修改方式
 

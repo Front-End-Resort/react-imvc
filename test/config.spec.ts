@@ -1,11 +1,10 @@
 import getConfig, * as EntireConfig from '../src/config'
-import * as _ from 'lodash'
 
 describe('config test', () => {
   describe('getConfig', () => {
     it('get default config with pass empty argument', () => {
       let config = getConfig()
-      expect(_.isEqual(config, EntireConfig.defaultConfig)).toBeTruthy()
+      expect(config).toStrictEqual(EntireConfig.defaultConfig)
     })
 
     it('config attribute passed in could cover default config when config is a object', () => {

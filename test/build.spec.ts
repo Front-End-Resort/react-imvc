@@ -208,10 +208,8 @@ describe('build', () => {
       let externals = [
         "@types/fetch-mock",
         "@types/jest",
-        "@types/lodash",
         "fetch-mock",
         "jest",
-        "lodash",
         "puppeteer"
       ]
       let list = [

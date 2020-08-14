@@ -1,5 +1,9 @@
 import webpack from 'webpack'
-import * as util from '../src/build/util'
+import {
+  matchExternals,
+  getExternals,
+  fixRuleSetCondition
+} from '../src/build/util'
 import createWebpackConfig from '../src/build/createWebpackConfig'
 import defaultConfig from '../src/config/config.defaults'
 const pkg = require('../package.json')
@@ -197,37 +201,60 @@ describe('build', () => {
   })
 
   describe('util', () => {
-    it('getExternals can get all dependences', () => {
-      let dependences = util.getExternals(defaultConfig)
-      let sourceLength = Object.keys(pkg.dependencies).length + Object.keys(pkg.devDependencies).length
-
-      expect(dependences.length).toBe(sourceLength)
+    describe('getExternals', () => {
+      it('getExternals can get all dependences', () => {
+        let dependences = getExternals(defaultConfig)
+        let sourceLength = Object.keys(pkg.dependencies).length + Object.keys(pkg.devDependencies).length
+  
+        expect(dependences.length).toBe(sourceLength)
+      })
     })
 
-    it('matchExternals can match the dependence', () => {
-      let externals = [
-        "@types/fetch-mock",
-        "@types/jest",
-        "fetch-mock",
-        "jest",
-        "puppeteer"
-      ]
-      let list = [
-        {
-          value: 'jest',
-          result: true
-        },
-        {
-          value: 'puppeteer',
-          result: true
-        },
-        {
-          value: 'react',
-          result: false
-        }
-      ]
-      list.forEach((item) => {
-        expect(util.matchExternals(externals, item.value)).toBe(item.result)
+    describe('matchExternals', () => {
+      it('matchExternals can match the dependence', () => {
+        let externals = [
+          "@types/fetch-mock",
+          "@types/jest",
+          "fetch-mock",
+          "jest",
+          "puppeteer"
+        ]
+        let list = [
+          {
+            value: 'jest',
+            result: true
+          },
+          {
+            value: 'puppeteer',
+            result: true
+          },
+          {
+            value: 'react',
+            result: false
+          }
+        ]
+        list.forEach((item) => {
+          expect(matchExternals(externals, item.value)).toBe(item.result)
+        })
+      })
+    })
+
+    describe('fixRuleSetCondition', () => {
+      it('regexp should not break its function', () => {
+        const condition1 = fixRuleSetCondition(/\.tsx$/) as RegExp
+        expect(condition1.test('foo.tsx')).toBeTruthy()
+
+        const condition2 = fixRuleSetCondition(/\.(js|mjs|jsx|ts|tsx)$/) as RegExp
+        expect(condition2.test('foo.js')).toBeTruthy()
+        expect(condition2.test('foo.mjs')).toBeTruthy()
+        expect(condition2.test('foo.jsx')).toBeTruthy()
+        expect(condition2.test('foo.ts')).toBeTruthy()
+        expect(condition2.test('foo.tsx')).toBeTruthy()
+      })
+
+      it('function shoukd work', () => {
+        const condition1 = fixRuleSetCondition((path) => /\.tsx$/.test(path)) as (path: string) => boolean
+        expect(condition1('foo.tsx')).toBeTruthy()
       })
     })
   })

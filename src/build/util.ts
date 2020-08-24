@@ -88,7 +88,6 @@ export function fixRuleSetCondition(test: RuleSetCondition): RuleSetCondition {
     if (test.test) {
       newTest.test = fixRuleSetCondition(test.test)
     }
-    
     return newTest
   } else {
     return test
@@ -100,6 +99,24 @@ export function fixWebpackConfig(config: Configuration) {
     config.module.rules = config.module.rules.map((rule) => {
       if (rule.test) {
         rule.test = fixRuleSetCondition(rule.test)
+      }
+      if (rule.include) {
+        rule.include = fixRuleSetCondition(rule.include)
+      }
+      if (rule.exclude) {
+        rule.exclude = fixRuleSetCondition(rule.exclude)
+      }
+      if (rule.issuer) {
+        rule.issuer = fixRuleSetCondition(rule.issuer)
+      }
+      if (rule.resource) {
+        rule.resource = fixRuleSetCondition(rule.resource)
+      }
+      if (rule.resourceQuery) {
+        rule.resourceQuery = fixRuleSetCondition(rule.resourceQuery)
+      }
+      if (rule.compiler) {
+        rule.compiler = fixRuleSetCondition(rule.compiler)
       }
       return rule
     })

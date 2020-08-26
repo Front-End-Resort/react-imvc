@@ -1,4 +1,4 @@
-import type { Store, Data, Actions } from "relite"
+import type { Store, Data, Actions } from 'relite'
 
 declare global {
   interface Window {
@@ -9,21 +9,19 @@ declare global {
 export default function attachDevToolsIfPossible<
   S extends object,
   AS extends Actions<S>
->(
-  store: Store<S, AS>
-): void {
-  if (process.env.NODE_ENV === "production") {
+>(store: Store<S, AS>): void {
+  if (process.env.NODE_ENV === 'production') {
     return
   }
-  if (typeof window === "undefined" || !window.__REDUX_DEVTOOLS_EXTENSION__) {
+  if (typeof window === 'undefined' || !window.__REDUX_DEVTOOLS_EXTENSION__) {
     return
   }
 
-  const __FROM_REDUX_DEVTOOLS_EXTENSION__ = "__FROM_REDUX_DEVTOOLS_EXTENSION__"
+  const __FROM_REDUX_DEVTOOLS_EXTENSION__ = '__FROM_REDUX_DEVTOOLS_EXTENSION__'
 
   let options = {
     name: window.location.pathname + window.location.search,
-    actionsWhitelist: Object.keys(store.actions)
+    actionsWhitelist: Object.keys(store.actions),
   }
   let reduxStore = window.__REDUX_DEVTOOLS_EXTENSION__(
     store.getState,
@@ -38,7 +36,7 @@ export default function attachDevToolsIfPossible<
     isSync = true
     reduxStore.dispatch({
       type: data.actionType,
-      payload: data.actionPayload
+      payload: data.actionPayload,
     })
     isSync = false
   })
@@ -51,7 +49,7 @@ export default function attachDevToolsIfPossible<
         previousState: store.getState(),
         currentState: reduxStore.getState(),
         start: new Date(),
-        end: new Date()
+        end: new Date(),
       } as Data<S, AS>)
     }
   })

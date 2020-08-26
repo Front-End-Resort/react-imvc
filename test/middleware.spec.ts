@@ -12,30 +12,30 @@ describe('middleware', () => {
     afterEach(() => {
       cache.clear()
     })
-    
+
     it('can get the right value from cache after putting it in', () => {
       let list = [
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'b',
           value: {
-            b: 'test'
+            b: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'c',
           value: {
-            c: 'test'
+            c: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       list.forEach((item) => {
         cache.put(item.key, item.value, item.time)
@@ -60,17 +60,17 @@ describe('middleware', () => {
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'a',
           value: {
-            a: 'test1'
+            a: 'test1',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       list.forEach((item) => {
         cache.put(item.key, item.value, item.time)
@@ -87,24 +87,24 @@ describe('middleware', () => {
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'b',
           value: {
-            b: 'test'
+            b: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'c',
           value: {
-            c: 'test'
+            c: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       list.forEach((item) => {
         cache.put(item.key, item.value, item.time)
@@ -134,10 +134,10 @@ describe('middleware', () => {
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       list.forEach((item) => {
         cache.put(item.key, item.value, item.time)
@@ -158,49 +158,49 @@ describe('middleware', () => {
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       let list1 = [
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'b',
           value: {
-            b: 'test'
+            b: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       let list2 = [
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'b',
           value: {
-            b: 'test'
+            b: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'c',
           value: {
-            c: 'test'
+            c: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       list.forEach((item) => {
         cache.put(item.key, item.value, item.time)
@@ -228,49 +228,49 @@ describe('middleware', () => {
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       let list1 = [
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'b',
           value: {
-            b: 'test'
+            b: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       let list2 = [
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'b',
           value: {
-            b: 'test'
+            b: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'c',
           value: {
-            c: 'test'
+            c: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       list.forEach((item) => {
         cache.put(item.key, item.value, item.time)
@@ -298,24 +298,24 @@ describe('middleware', () => {
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'b',
           value: {
-            b: 'test'
+            b: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'c',
           value: {
-            c: 'test'
+            c: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       list.forEach((item) => {
         cache.put(item.key, item.value, item.time)
@@ -354,24 +354,24 @@ describe('middleware', () => {
         {
           key: 'a',
           value: {
-            a: 'test'
+            a: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'b',
           value: {
-            b: 'test'
+            b: 'test',
           },
-          time: 10000
+          time: 10000,
         },
         {
           key: 'c',
           value: {
-            c: 'test'
+            c: 'test',
           },
-          time: 10000
-        }
+          time: 10000,
+        },
       ]
       list.forEach((item) => {
         cache.put(item.key, item.value, item.time)
@@ -389,10 +389,10 @@ describe('middleware', () => {
       let item = {
         key: 'a',
         value: {
-          a: 'test'
+          a: 'test',
         },
         time: 10000,
-        timeoutCallback: callback
+        timeoutCallback: callback,
       }
       cache.put(item.key, item.value, item.time, item.timeoutCallback)
 
@@ -408,11 +408,11 @@ describe('middleware', () => {
         const root = `/root`
         const require = {
           url: '/root/foo/bar/1',
-          basename: ''
+          basename: '',
         }
         const handler = shareRoot(root)
         handler(require as any, {} as any, () => {})
-  
+
         expect(require.url).toBe('/foo/bar/1')
         expect(require.basename).toBe('/root')
       })
@@ -421,11 +421,11 @@ describe('middleware', () => {
         const root = `/root/`
         const require = {
           url: '/root/foo/bar/1',
-          basename: ''
+          basename: '',
         }
         const handler = shareRoot(root)
         handler(require as any, {} as any, () => {})
-  
+
         expect(require.url).toBe('/foo/bar/1')
         expect(require.basename).toBe('/root')
       })
@@ -436,11 +436,11 @@ describe('middleware', () => {
         const root = `/root`
         const require = {
           url: '/rootfoo/bar/1',
-          basename: ''
+          basename: '',
         }
         const handler = shareRoot(root)
         handler(require as any, {} as any, () => {})
-  
+
         expect(require.url).toBe('/foo/bar/1')
         expect(require.basename).toBe('/root')
       })
@@ -451,11 +451,11 @@ describe('middleware', () => {
         const root = `/root`
         const require = {
           url: '/foo/bar/1',
-          basename: ''
+          basename: '',
         }
         const handler = shareRoot(root)
         handler(require as any, {} as any, () => {})
-  
+
         expect(require.url).toBe('/foo/bar/1')
         expect(require.basename).toBe('')
       })

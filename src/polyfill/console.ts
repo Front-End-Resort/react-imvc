@@ -9,7 +9,7 @@ export interface Window {
 function consolePolyfill(window: Window): void {
   // Avoid `console` errors in browsers that lack a console.
   let method
-  let noop = function () { }
+  let noop = function () {}
   let methods = [
     'assert',
     'clear',
@@ -35,7 +35,7 @@ function consolePolyfill(window: Window): void {
     'timeStamp',
     'trace',
     'warn',
-    'msIsIndependentlyComposed'
+    'msIsIndependentlyComposed',
   ]
   let length = methods.length
   let console = (window.console = window.console || {})

@@ -13,7 +13,9 @@ export interface OuterClickWrapperProps {
   children?: React.ReactNode
 }
 
-export default class OuterClickWrapper extends Component<OuterClickWrapperProps> {
+export default class OuterClickWrapper extends Component<
+  OuterClickWrapperProps
+> {
   componentDidMount() {
     if (document.addEventListener) {
       document.addEventListener('click', this.handleOutterClick)

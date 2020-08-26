@@ -10,8 +10,8 @@ describe('config test', () => {
     it('config attribute passed in could cover default config when config is a object', () => {
       let options = {
         config: {
-          basename: 'test'
-        }
+          basename: 'test',
+        },
       }
       let config = getConfig(options)
       expect(config.basename).toBe('test')
@@ -19,7 +19,7 @@ describe('config test', () => {
 
     it('config attribute passed in could cover default config when config is a path string', () => {
       let options = {
-        config: './test/config.ts'
+        config: './test/config.ts',
       }
       let config = getConfig(options)
       expect(config.basename).toBe('test')

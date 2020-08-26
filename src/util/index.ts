@@ -61,13 +61,10 @@ export type mapFunction = (value: any, key: string) => any
 export type anyObject = { [key: string]: any }
 
 export function mapValues(obj: anyObject, fn: mapFunction): anyObject {
-  return Object.keys(obj).reduce(
-    (result, key) => {
-      result[key] = fn(obj[key], key)
-      return result
-    },
-    {} as anyObject
-  )
+  return Object.keys(obj).reduce((result, key) => {
+    result[key] = fn(obj[key], key)
+    return result
+  }, {} as anyObject)
 }
 
 export function isThenable(obj: any) {
@@ -89,14 +86,10 @@ export function setValue(
   [key, ...rest]: string[],
   value: unknown
 ): any {
-  obj = Array.isArray(obj)
-    ? obj.concat()
-    : Object.assign({}, obj)
+  obj = Array.isArray(obj) ? obj.concat() : Object.assign({}, obj)
 
   // @ts-ignore
-  obj[key] = rest.length > 0
-    ? setValue(obj[key], rest, value)
-    : value
+  obj[key] = rest.length > 0 ? setValue(obj[key], rest, value) : value
 
   return obj
 }
@@ -109,23 +102,17 @@ export function setValueByPath(
   return setValue(obj, getPath(path), value)
 }
 
-export function getValue(
-  ret: any,
-  key: string | number
-): any {
+export function getValue(ret: any, key: string | number): any {
   return ret[key]
 }
 
-export function getValueByPath(
-  obj: any,
-  path: string | string[]
-): any {
+export function getValueByPath(obj: any, path: string | string[]): any {
   return getPath(path).reduce(getValue, obj)
 }
 
-export function getKeys<T extends {}>(o: T): Array<keyof T>{
+export function getKeys<T extends {}>(o: T): Array<keyof T> {
   return Object.keys(o) as Array<keyof T>
-} 
+}
 
 export function ab2str(buf: Uint8Array): string {
   return String.fromCharCode.apply(null, Array.from(new Uint16Array(buf)))
@@ -136,7 +123,7 @@ export function stringToUnit8Array(str: string): Uint8Array {
   for (let i = 0, j = str.length; i < j; ++i) {
     arr.push(str.charCodeAt(i))
   }
- 
+
   let tmpUint8Array = new Uint8Array(arr)
   return tmpUint8Array
 }

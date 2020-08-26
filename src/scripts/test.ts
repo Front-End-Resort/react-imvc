@@ -7,8 +7,8 @@ import yargs from 'yargs'
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
-process.on('unhandledRejection', error => {
-	throw error
+process.on('unhandledRejection', (error) => {
+  throw error
 })
 
 import fs from 'fs'
@@ -21,46 +21,48 @@ import getConfig from '../config'
 let config = getConfig(yargs.argv)
 
 require('@babel/register')({
-	...config.babel(),
-	extensions: ['.es6', '.es', '.jsx', '.js', '.mjs', '.ts', '.tsx']
+  ...config.babel(),
+  extensions: ['.es6', '.es', '.jsx', '.js', '.mjs', '.ts', '.tsx'],
 })
 
 let files: string[] = []
 
 function travelDirectoryToAddTestFiles(dir: string): void {
-	fs.readdirSync(dir).forEach(file => {
-		let filename = path.join(dir, file)
-		// ignore node_modules
-		if (filename.indexOf('node_modules') !== -1) {
-			return
-		}
-		// read file deeply
-		if (fs.statSync(filename).isDirectory()) {
-			return travelDirectoryToAddTestFiles(filename)
-		}
-		// add *test.js file to the jest instance
-		if (
-			filename.substr(-8) === '.test.js'
-				|| filename.substr(-8) === '.test.ts'
-		) {
-			return files.push(filename)
-		}
-	})
+  fs.readdirSync(dir).forEach((file) => {
+    let filename = path.join(dir, file)
+    // ignore node_modules
+    if (filename.indexOf('node_modules') !== -1) {
+      return
+    }
+    // read file deeply
+    if (fs.statSync(filename).isDirectory()) {
+      return travelDirectoryToAddTestFiles(filename)
+    }
+    // add *test.js file to the jest instance
+    if (
+      filename.substr(-8) === '.test.js' ||
+      filename.substr(-8) === '.test.ts'
+    ) {
+      return files.push(filename)
+    }
+  })
 }
 
 travelDirectoryToAddTestFiles(process.cwd())
 
-const options = Object.assign({
-	roots: [process.cwd()],
-	testRegexp: files
-}, yargs.argv)
+const options = Object.assign(
+  {
+    roots: [process.cwd()],
+    testRegexp: files,
+  },
+  yargs.argv
+)
 
-jest.runCLI(options, [
-	process.cwd()
-])
-.then((success) => {
-	console.log("test done")
-})
-.catch((failure) => {
-	console.error(failure)
-})
+jest
+  .runCLI(options, [process.cwd()])
+  .then((success) => {
+    console.log('test done')
+  })
+  .catch((failure) => {
+    console.error(failure)
+  })

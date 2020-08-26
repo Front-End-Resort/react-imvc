@@ -2,17 +2,20 @@ import webpack from 'webpack'
 import {
   matchExternals,
   getExternals,
-  fixRuleSetCondition
+  fixRuleSetCondition,
 } from '../src/build/util'
 import createWebpackConfig from '../src/build/createWebpackConfig'
 import defaultConfig from '../src/config/config.defaults'
 const pkg = require('../package.json')
 
 function isEntry(input: any): input is webpack.Entry {
-  return typeof input === 'object' && Object.prototype.toString.call(input) === '[object] Array'
+  return (
+    typeof input === 'object' &&
+    Object.prototype.toString.call(input) === '[object] Array'
+  )
 }
 function standardize(url: string): string {
-  return url.replace(/\\/ig, '/')
+  return url.replace(/\\/gi, '/')
 }
 
 describe('build', () => {
@@ -35,12 +38,12 @@ describe('build', () => {
         }
         expect(config.devtool).toBe('source-map')
         expect(config.plugins).toBeDefined()
-        expect(config.plugins).toHaveLength(1)          
+        expect(config.plugins).toHaveLength(1)
         expect(config.optimization).toStrictEqual({
           splitChunks: {
             chunks: 'all',
-            name: 'vendor'
-          }
+            name: 'vendor',
+          },
         })
       })
 
@@ -51,22 +54,26 @@ describe('build', () => {
         expect(config.entry).toBeDefined()
         expect(typeof config.entry).toBe('object')
         if (isEntry(config.entry)) {
-          expect(standardize(config.entry.index as string)).toMatch('/src/entry/client')
+          expect(standardize(config.entry.index as string)).toMatch(
+            '/src/entry/client'
+          )
         }
         expect(config.output).toBeDefined()
         expect(config.output).toHaveProperty('filename', 'js/[name].js')
         expect(config.output).toHaveProperty('chunkFilename', 'js/[name].js')
         if (config.output) {
-          expect(standardize(config.output.path as string)).toMatch('/publish/static')
+          expect(standardize(config.output.path as string)).toMatch(
+            '/publish/static'
+          )
         }
         expect(config.devtool).toBe('')
         expect(config.plugins).toBeDefined()
-        expect(config.plugins).toHaveLength(3)          
+        expect(config.plugins).toHaveLength(3)
         expect(config.optimization).toStrictEqual({
           splitChunks: {
             chunks: 'all',
-            name: 'vendor'
-          }
+            name: 'vendor',
+          },
         })
       })
     })
@@ -74,17 +81,19 @@ describe('build', () => {
     describe('NODE_ENV', () => {
       describe('production', () => {
         it('isServer is true', () => {
-          process.env.NODE_ENV = "production"
+          process.env.NODE_ENV = 'production'
           const options = Object.assign(defaultConfig)
           const config = createWebpackConfig(options, true)
-  
+
           expect(config.mode).toBe('production')
           expect(config.watch).toBeFalsy()
           expect(config.output).toBeDefined()
           expect(config.output).toHaveProperty('filename', 'server.bundle.js')
           expect(config.output).toHaveProperty('libraryTarget', 'commonjs2')
           if (config.output) {
-            expect(standardize(config.output.path as string)).toMatch('/publish')
+            expect(standardize(config.output.path as string)).toMatch(
+              '/publish'
+            )
           }
           expect(config.optimization).toBeDefined()
           if (config.optimization) {
@@ -93,107 +102,123 @@ describe('build', () => {
         })
 
         it('isServer is false', () => {
-          process.env.NODE_ENV = "production"
+          process.env.NODE_ENV = 'production'
           const options = Object.assign(defaultConfig)
           const config = createWebpackConfig(options)
-  
+
           expect(config.mode).toBe('production')
           expect(config.watch).toBeFalsy()
           expect(config.output).toBeDefined()
-          expect(config.output).toHaveProperty('filename', 'js/[name]-[contenthash:6].js')
-          expect(config.output).toHaveProperty('chunkFilename', 'js/[name]-[contenthash:6].js')
+          expect(config.output).toHaveProperty(
+            'filename',
+            'js/[name]-[contenthash:6].js'
+          )
+          expect(config.output).toHaveProperty(
+            'chunkFilename',
+            'js/[name]-[contenthash:6].js'
+          )
           if (config.output) {
-            expect(standardize(config.output.path as string)).toMatch('/publish/static')
+            expect(standardize(config.output.path as string)).toMatch(
+              '/publish/static'
+            )
           }
           expect(config.optimization).toBeDefined()
           expect(config.optimization).toHaveProperty('minimizer')
           expect(config.optimization).toHaveProperty('splitChunks', {
             chunks: 'all',
-            name: 'vendor'
+            name: 'vendor',
           })
         })
       })
 
       describe('development', () => {
         it('isServer is true', () => {
-          process.env.NODE_ENV = "development"
+          process.env.NODE_ENV = 'development'
           const options = Object.assign(defaultConfig)
           const config = createWebpackConfig(options, true)
-  
+
           expect(config.mode).toBe('development')
           expect(config.watch).toBeTruthy()
           expect(config.output).toBeDefined()
           expect(config.output).toHaveProperty('filename', 'server.bundle.js')
           expect(config.output).toHaveProperty('libraryTarget', 'commonjs2')
           if (config.output) {
-            expect(standardize(config.output.path as string)).toMatch('/publish')
+            expect(standardize(config.output.path as string)).toMatch(
+              '/publish'
+            )
           }
           expect(config.optimization).toBeDefined()
           expect(config.optimization).toHaveProperty('splitChunks', {
             chunks: 'all',
-            name: 'vendor'
+            name: 'vendor',
           })
         })
 
         it('isServer is false', () => {
-          process.env.NODE_ENV = "development"
+          process.env.NODE_ENV = 'development'
           const options = Object.assign(defaultConfig)
           const config = createWebpackConfig(options)
-  
+
           expect(config.mode).toBe('development')
           expect(config.watch).toBeTruthy()
           expect(config.output).toBeDefined()
           expect(config.output).toHaveProperty('filename', 'js/[name].js')
           expect(config.output).toHaveProperty('chunkFilename', 'js/[name].js')
           if (config.output) {
-            expect(standardize(config.output.path as string)).toMatch('/publish/static')
+            expect(standardize(config.output.path as string)).toMatch(
+              '/publish/static'
+            )
           }
           expect(config.optimization).toBeDefined()
           expect(config.optimization).toHaveProperty('splitChunks', {
             chunks: 'all',
-            name: 'vendor'
+            name: 'vendor',
           })
         })
       })
 
       describe('test', () => {
         it('isServer is true', () => {
-          process.env.NODE_ENV = "test"
+          process.env.NODE_ENV = 'test'
           const options = Object.assign(defaultConfig)
           const config = createWebpackConfig(options, true)
-  
+
           expect(config.mode).toBe('development')
           expect(config.watch).toBeFalsy()
           expect(config.output).toBeDefined()
           expect(config.output).toHaveProperty('filename', 'server.bundle.js')
           expect(config.output).toHaveProperty('libraryTarget', 'commonjs2')
           if (config.output) {
-            expect(standardize(config.output.path as string)).toMatch('/publish')
+            expect(standardize(config.output.path as string)).toMatch(
+              '/publish'
+            )
           }
           expect(config.optimization).toBeDefined()
           expect(config.optimization).toHaveProperty('splitChunks', {
             chunks: 'all',
-            name: 'vendor'
+            name: 'vendor',
           })
         })
 
         it('isServer is false', () => {
-          process.env.NODE_ENV = "test"
+          process.env.NODE_ENV = 'test'
           const options = Object.assign(defaultConfig)
           const config = createWebpackConfig(options)
-  
+
           expect(config.mode).toBe('development')
           expect(config.watch).toBeFalsy()
           expect(config.output).toBeDefined()
           expect(config.output).toHaveProperty('filename', 'js/[name].js')
           expect(config.output).toHaveProperty('chunkFilename', 'js/[name].js')
           if (config.output) {
-            expect(standardize(config.output.path as string)).toMatch('/publish/static')
+            expect(standardize(config.output.path as string)).toMatch(
+              '/publish/static'
+            )
           }
           expect(config.optimization).toBeDefined()
           expect(config.optimization).toHaveProperty('splitChunks', {
             chunks: 'all',
-            name: 'vendor'
+            name: 'vendor',
           })
         })
       })
@@ -204,8 +229,10 @@ describe('build', () => {
     describe('getExternals', () => {
       it('getExternals can get all dependences', () => {
         let dependences = getExternals(defaultConfig)
-        let sourceLength = Object.keys(pkg.dependencies).length + Object.keys(pkg.devDependencies).length
-  
+        let sourceLength =
+          Object.keys(pkg.dependencies).length +
+          Object.keys(pkg.devDependencies).length
+
         expect(dependences.length).toBe(sourceLength)
       })
     })
@@ -213,25 +240,25 @@ describe('build', () => {
     describe('matchExternals', () => {
       it('matchExternals can match the dependence', () => {
         let externals = [
-          "@types/fetch-mock",
-          "@types/jest",
-          "fetch-mock",
-          "jest",
-          "puppeteer"
+          '@types/fetch-mock',
+          '@types/jest',
+          'fetch-mock',
+          'jest',
+          'puppeteer',
         ]
         let list = [
           {
             value: 'jest',
-            result: true
+            result: true,
           },
           {
             value: 'puppeteer',
-            result: true
+            result: true,
           },
           {
             value: 'react',
-            result: false
-          }
+            result: false,
+          },
         ]
         list.forEach((item) => {
           expect(matchExternals(externals, item.value)).toBe(item.result)
@@ -244,7 +271,9 @@ describe('build', () => {
         const condition1 = fixRuleSetCondition(/\.tsx$/) as RegExp
         expect(condition1.test('foo.tsx')).toBeTruthy()
 
-        const condition2 = fixRuleSetCondition(/\.(js|mjs|jsx|ts|tsx)$/) as RegExp
+        const condition2 = fixRuleSetCondition(
+          /\.(js|mjs|jsx|ts|tsx)$/
+        ) as RegExp
         expect(condition2.test('foo.js')).toBeTruthy()
         expect(condition2.test('foo.mjs')).toBeTruthy()
         expect(condition2.test('foo.jsx')).toBeTruthy()
@@ -253,7 +282,9 @@ describe('build', () => {
       })
 
       it('function shoukd work', () => {
-        const condition1 = fixRuleSetCondition((path) => /\.tsx$/.test(path)) as (path: string) => boolean
+        const condition1 = fixRuleSetCondition((path) =>
+          /\.tsx$/.test(path)
+        ) as (path: string) => boolean
         expect(condition1('foo.tsx')).toBeTruthy()
       })
     })

@@ -8,7 +8,7 @@ export function getExternals(config: EntireConfig): string[] {
   let list: string[] = [
     path.resolve('package.json'),
     path.join(__dirname, '../../package.json'),
-    path.join(config.root, '../package.json')
+    path.join(config.root, '../package.json'),
   ]
 
   while (true) {
@@ -31,7 +31,7 @@ export function getExternals(config: EntireConfig): string[] {
   }
 
   let map: Record<string, boolean> = {}
-  dependencies = dependencies.filter(name => {
+  dependencies = dependencies.filter((name) => {
     if (map[name]) {
       return false
     }
@@ -54,22 +54,20 @@ export function matchExternals(
   return false
 }
 
-
-
 export function fixRuleSetCondition(test: RuleSetCondition): RuleSetCondition {
   if (isRegExp(test)) {
-		const str = test.toString()
+    const str = test.toString()
     return RegExp(str.slice(1, str.length - 1))
   } else if (typeof test === 'string') {
     return test + ''
   } else if (isFunction(test)) {
-    return function(path) {
+    return function (path) {
       return test(path)
     }
   } else if (isArray(test)) {
     return Array.from(test).map(fixRuleSetCondition)
   } else if (isObject(test)) {
-		let newTest: RuleSetCondition = {}
+    let newTest: RuleSetCondition = {}
     if (test.and) {
       newTest.and = Array.from(test.and).map(fixRuleSetCondition)
     }

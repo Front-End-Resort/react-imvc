@@ -11,7 +11,7 @@ export interface ErrorBoundaryProps {
 }
 
 export default class ErrorBoundary extends React.Component<
-ErrorBoundaryProps,
+  ErrorBoundaryProps,
   Partial<BaseState>
 > {
   static ignoreErrors = true
@@ -20,16 +20,16 @@ ErrorBoundaryProps,
     return { hasError: true }
   }
   static defaultProps: ErrorBoundaryProps = {
-    fallback: null
+    fallback: null,
   }
   state: Readonly<Partial<BaseState>> = {
-    hasError: false
+    hasError: false,
   }
 
   catchError(error: Error) {
     let { ctrl } = this.context
     if (ctrl.errorDidCatch) {
-      ctrl.errorDidCatch(error, "view")
+      ctrl.errorDidCatch(error, 'view')
     }
   }
 

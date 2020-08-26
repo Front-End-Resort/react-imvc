@@ -7,11 +7,7 @@ import start from '../start'
 import getConfig from '../config'
 import createGulpTask from './createGulpTask'
 import createWebpackConfig from './createWebpackConfig'
-import type {
-  Options,
-  EntireConfig,
-  AppSettings
-} from '..'
+import type { Options, EntireConfig, AppSettings } from '..'
 
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
@@ -24,7 +20,7 @@ export default function build(options: Options): Promise<EntireConfig | void> {
     Promise.all(
       [
         startWebpackForClient(config),
-        config.useServerBundle && startWebpackForServer(config)
+        config.useServerBundle && startWebpackForServer(config),
       ].filter(Boolean)
     )
   let startStaticEntryPgs = () => startStaticEntry(config)
@@ -67,9 +63,7 @@ function startWebpackForClient(
   })
 }
 
-function startWebpackForServer(
-  config: EntireConfig
-): Promise<EntireConfig> {
+function startWebpackForServer(config: EntireConfig): Promise<EntireConfig> {
   let webpackConfig = createWebpackConfig(config, true)
   return new Promise((resolve, reject) => {
     webpack(webpackConfig, (error, stats) => {
@@ -113,7 +107,7 @@ async function startStaticEntry(
 
   let appSettings: AppSettings = {
     ...config.appSettings,
-    type: 'createHashHistory'
+    type: 'createHashHistory',
   }
   let staticEntryconfig: EntireConfig = {
     ...config,
@@ -121,11 +115,11 @@ async function startStaticEntry(
     // 默认当前文件夹
     publicPath: config.publicPath || '.',
     appSettings,
-    SSR: false
+    SSR: false,
   }
 
   let { server } = await start({
-    config: staticEntryconfig
+    config: staticEntryconfig,
   })
 
   let url = `http://localhost:${config.port}/__CREATE_STATIC_ENTRY__`
@@ -142,7 +136,6 @@ async function startStaticEntry(
   server.close(() => console.log('finish generating static entry file'))
 
   return new Promise<EntireConfig>((resolve, reject) => {
-
     type ErrorCallback = (err: NodeJS.ErrnoException | null) => void
 
     let callback: ErrorCallback = (error) => {

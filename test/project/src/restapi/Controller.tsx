@@ -10,20 +10,22 @@ type State = BaseState & {
 
 const initialState = {
   data: {
-    foo: ''
-  }
+    foo: '',
+  },
 }
 
-interface Payload { data: { foo: string } }
+interface Payload {
+  data: { foo: string }
+}
 const UPDATE_DATA: Action<State, Payload> = (state, payload) => {
   return {
     ...state,
-    data: payload
+    data: payload,
   }
 }
 
 const actions = {
-  UPDATE_DATA
+  UPDATE_DATA,
 }
 
 export default class RestAPI extends Controller<State, typeof actions> {
@@ -36,20 +38,20 @@ export default class RestAPI extends Controller<State, typeof actions> {
   }
   async componentWillCreate() {
     await this.fetch('/foo')
-      .then(data => {
+      .then((data) => {
         this.store.actions.UPDATE_DATA(data)
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err)
       })
   }
 }
 
 interface ViewProps {
-  state: State,
+  state: State
   ctrl: RestAPI
 }
 
 function View({ state }: ViewProps) {
-	return <div id="restapi">{ state.data.foo }</div>
+  return <div id="restapi">{state.data.foo}</div>
 }

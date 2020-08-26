@@ -18,7 +18,7 @@ function View() {
   }
   window.scroll = handleScroll
   useCallback(() => {
-    return () => window.scroll = nativeScroll
+    return () => (window.scroll = nativeScroll)
   }, [])
-	return <div id="unscroll">{status}</div>
+  return <div id="unscroll">{status}</div>
 }

@@ -12,11 +12,11 @@ export interface Ctrl {
 }
 
 const initialState: State = {
-  count: 0
+  count: 0,
 }
 
 export default class extends Controller<State, {}> implements Ctrl {
-	SSR = true // enable server side rendering
+  SSR = true // enable server side rendering
   View = View
   initialState = initialState
   constructor(location: Location, context: Context) {
@@ -25,18 +25,18 @@ export default class extends Controller<State, {}> implements Ctrl {
 
   handleClick = () => {
     this.store.actions.UPDATE_INPUT_VALUE({
-      count: this.store.getState().count + 1
+      count: this.store.getState().count + 1,
     })
   }
 }
 
 export type ViewProps = {
-  state: State,
+  state: State
   ctrl: Ctrl
 }
 
 function View({ state, ctrl }: ViewProps) {
-	return (
+  return (
     <div id="outer_click">
       <div id="out">
         <div>

@@ -10,7 +10,7 @@ import {
   getClearFilePath,
   stringToUnit8Array,
   isThenable,
-  isIMVCController
+  isIMVCController,
 } from '../util'
 import type {
   HistoryLocation,
@@ -18,13 +18,9 @@ import type {
   LoadController,
   ControllerConstructor,
   Route,
-  ViewEngineRender
+  ViewEngineRender,
 } from 'create-app/server'
-import type {
-  EntireConfig,
-  AppSettings,
-  Req
-} from '..'
+import type { EntireConfig, AppSettings, Req } from '..'
 
 function getModule(module: any) {
   return module.default || module
@@ -38,16 +34,11 @@ function commonjsLoader(
   if (isIMVCController(controller) || isThenable(controller)) {
     ctrl = controller
   } else {
-    ctrl = controller(
-      location,
-      context
-    )
+    ctrl = controller(location, context)
   }
 
   if (isThenable(ctrl)) {
-    return (
-      ctrl as Promise<ControllerConstructor>
-    ).then(getModule)
+    return (ctrl as Promise<ControllerConstructor>).then(getModule)
   } else {
     return getModule(ctrl)
   }
@@ -78,12 +69,12 @@ function renderToNodeStream(
   return new Promise<ArrayBuffer>((resolve, reject) => {
     let stream = ReactDOMServer.renderToNodeStream(view)
     let buffers: Uint8Array[] = []
-    stream.on('data', chunk => buffers.push(chunk))
+    stream.on('data', (chunk) => buffers.push(chunk))
     stream.on('end', () => {
       React.createElement = createElement
       resolve(Buffer.concat(buffers))
     })
-    stream.on('error', error => {
+    stream.on('error', (error) => {
       if (!controller) {
         React.createElement = createElement
         return reject(error)
@@ -137,7 +128,7 @@ function renderToString(
 
 const renderers = {
   renderToNodeStream,
-  renderToString
+  renderToString,
 }
 
 function getRightPath(filePath: string): string {
@@ -172,16 +163,16 @@ export default function createPageRouter(options: EntireConfig) {
   routes = getFlatList(routes)
 
   let router = Router()
-  let render: ViewEngineRender<React.ReactElement, Controller<any, any>>
-    = renderers[config.renderMode] || renderToNodeStream
+  let render: ViewEngineRender<React.ReactElement, Controller<any, any>> =
+    renderers[config.renderMode] || renderToNodeStream
   let serverAppSettings: AppSettings = {
     loader: commonjsLoader,
     routes: routes,
     viewEngine: { render },
     context: {
       isClient: false,
-      isServer: true
-    }
+      isServer: true,
+    },
   }
   let app = createApp(serverAppSettings)
   let layoutView = config.layout
@@ -205,9 +196,9 @@ export default function createPageRouter(options: EntireConfig) {
         )
         app = createApp({
           ...serverAppSettings,
-          routes
+          routes,
         })
-      }
+      },
     })
   }
 
@@ -224,7 +215,7 @@ export default function createPageRouter(options: EntireConfig) {
       isServer: true,
       isClient: false,
       req,
-      res
+      res,
     }
 
     try {
@@ -242,27 +233,25 @@ export default function createPageRouter(options: EntireConfig) {
       // content 可能是异步渲染的
       content = await content
 
-      let initialState = controller.store
-        ? controller.store.getState()
-        : void 0
+      let initialState = controller.store ? controller.store.getState() : void 0
       let htmlConfigs = initialState ? initialState.html : void 0
       let data = {
         ...htmlConfigs,
         content,
-        initialState
+        initialState,
       }
 
       if (controller.destroy) {
         controller.destroy()
       }
-      
+
       // 支持通过 res.locals.layoutView 动态确定 layoutView
       res.render(res.locals.layoutView || layoutView, data)
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(error)
       }
-      
+
       next(error)
     }
   })

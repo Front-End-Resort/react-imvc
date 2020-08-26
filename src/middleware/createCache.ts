@@ -22,8 +22,8 @@ export interface Cache {
 }
 
 export interface Record {
-  value: any,
-  expire: number,
+  value: any
+  expire: number
   timeout?: NodeJS.Timeout | number
 }
 
@@ -67,19 +67,16 @@ export default () => {
 
       let record: Record = {
         value: value,
-        expire: (time || 0) + Date.now()
+        expire: (time || 0) + Date.now(),
       }
 
       if (!isNaN(record.expire)) {
-        record.timeout = setTimeout(
-          function () {
-            _del(key)
-            if (timeoutCallback) {
-              timeoutCallback(key, value)
-            }
-          },
-          time
-        )
+        record.timeout = setTimeout(function () {
+          _del(key)
+          if (timeoutCallback) {
+            timeoutCallback(key, value)
+          }
+        }, time)
       }
 
       cache[key] = record
@@ -136,11 +133,11 @@ export default () => {
       return null
     },
 
-    size: function(): number {
+    size: function (): number {
       return size
     },
 
-    memsize: function(): number {
+    memsize: function (): number {
       let size = 0
       for (let _ in cache) {
         size++
@@ -152,17 +149,17 @@ export default () => {
       debug = bool
     },
 
-    hits: function(): number {
+    hits: function (): number {
       return hitCount
     },
 
-    misses: function(): number {
+    misses: function (): number {
       return missCount
     },
 
-    keys: function(): string[] {
+    keys: function (): string[] {
       return Object.keys(cache)
-    }
+    },
   }
 
   return result

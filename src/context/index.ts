@@ -3,14 +3,14 @@ import type Controller from '../controller'
 
 function createContext<Ctrl extends Controller<any, any>>(ctrl: Ctrl) {
   type GlobalContextType = {
-    ctrl: typeof ctrl,
-    location: typeof ctrl.location,
-    history: typeof ctrl.history,
-    state: ReturnType<typeof ctrl.store.getState>,
-    actions: typeof ctrl.store.actions,
-    preload: typeof ctrl.context.preload,
-    matcher: typeof ctrl.matcher,
-    loader: typeof ctrl.loader,
+    ctrl: typeof ctrl
+    location: typeof ctrl.location
+    history: typeof ctrl.history
+    state: ReturnType<typeof ctrl.store.getState>
+    actions: typeof ctrl.store.actions
+    preload: typeof ctrl.context.preload
+    matcher: typeof ctrl.matcher
+    loader: typeof ctrl.loader
     prefetch: typeof ctrl.prefetch
   }
 

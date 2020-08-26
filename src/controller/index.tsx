@@ -9,23 +9,14 @@ import * as _ from '../util'
 import * as shareActions from './actions'
 import ViewManager from '../component/ViewManager'
 import attachDevToolsIfPossible from './attachDevToolsIfPossible'
-import type {
-  Store,
-  Data,
-  Actions,
-  Currings
-} from 'relite'
-import type {
-  HistoryWithBFOL,
-  ILWithBQ,
-  BLWithBQ,
-} from 'create-history'
+import type { Store, Data, Actions, Currings } from 'relite'
+import type { HistoryWithBFOL, ILWithBQ, BLWithBQ } from 'create-history'
 import type {
   Controller as AppController,
   HistoryLocation,
   Matcher,
   Loader,
-  CacheStorage
+  CacheStorage,
 } from 'create-app/server'
 import type {
   BaseViewFC,
@@ -38,7 +29,7 @@ import type {
   Meta,
   Forwarder,
   Location,
-  FetchOptions
+  FetchOptions,
 } from '..'
 
 export type BaseActions = typeof shareActions
@@ -51,8 +42,8 @@ const REDIRECT =
     : Object('react.imvc.redirect')
 
 const EmptyView = <Ctrl extends Controller<any, any>>(props?: {
-  state?: {},
-  actions?: {},
+  state?: {}
+  actions?: {}
   ctrl?: Ctrl
 }) => null
 
@@ -65,7 +56,7 @@ let uid = 0 // seed of controller id
  */
 export default class Controller<
   S extends object,
-  AS extends Actions<BaseState& S>
+  AS extends Actions<BaseState & S>
 > implements AppController {
   location: Location
   history: HistoryWithBFOL<BLWithBQ, ILWithBQ>
@@ -83,7 +74,7 @@ export default class Controller<
   API?: API
   restapi?: string
   resetScrollOnMount?: boolean
-  
+
   meta: Meta
   proxyHandler?: {
     attach(): void
@@ -94,8 +85,12 @@ export default class Controller<
   loader: Loader = {} as Loader
 
   // life circle
-  getInitialState(state: S & BaseState): any { return state }
-  getFinalActions(actions: AS): any { return actions }
+  getInitialState(state: S & BaseState): any {
+    return state
+  }
+  getFinalActions(actions: AS): any {
+    return actions
+  }
   shouldComponentCreate?(): void | boolean | Promise<void | boolean>
   componentWillCreate?(): void | Promise<void>
   componentDidFirstMount?(): void | Promise<void>
@@ -126,7 +121,9 @@ export default class Controller<
   clearContainer?(): void
 
   // state change listener
-  handleInputChange(path: string, value: S, oldValue: S): S { return value }
+  handleInputChange(path: string, value: S, oldValue: S): S {
+    return value
+  }
 
   constructor(location: Location, context: Context) {
     this.meta = {
@@ -135,7 +132,7 @@ export default class Controller<
       isDestroyed: false,
       hadMounted: false, // change by ControllerProxy
       unsubscribeList: [],
-      isInitializing: false
+      isInitializing: false,
     }
     /**
      * 将 location.key 赋值给 this.meta 并在 location 里删除
@@ -152,17 +149,18 @@ export default class Controller<
     this.deepCloneInitialState = true
 
     // For TypeScript placeholder
-    this.store = void 0 as unknown as Store<S & BaseState, BaseActions & AS>
-    this.history = (
-      createHistory() as unknown as HistoryWithBFOL<BLWithBQ, ILWithBQ>
-    )
+    this.store = (void 0 as unknown) as Store<S & BaseState, BaseActions & AS>
+    this.history = (createHistory() as unknown) as HistoryWithBFOL<
+      BLWithBQ,
+      ILWithBQ
+    >
   }
-  
+
   // symbol of react-imvc controller
   static get __SYMBOL() {
     return 'REACT_IMVC_CONTROLLER'
   }
-  
+
   /**
    * 封装 fetch, https://github.github.io/fetch
    * options.json === false 不自动转换为 json
@@ -170,10 +168,7 @@ export default class Controller<
    * options.timeoutErrorFormatter 超时时错误信息展示格式
    * options.raw 不补全 restfulBasename
    */
-  fetch(
-    url: string,
-    options: FetchOptions = {}
-  ) {
+  fetch(url: string, options: FetchOptions = {}) {
     let { context, API } = this
 
     /**
@@ -194,8 +189,8 @@ export default class Controller<
       ...options,
       headers: {
         'Content-Type': 'application/json',
-        ...options.headers
-      }
+        ...options.headers,
+      },
     }
     /**
      * 浏览器端的 fetch 有 credentials: 'include'，会自动带上 cookie
@@ -207,9 +202,7 @@ export default class Controller<
     }
 
     // 支持使用方手动传入自定义fetch方法
-    let fetchLocal = typeof options.fetch === 'function'
-      ? options.fetch
-      : fetch
+    let fetchLocal = typeof options.fetch === 'function' ? options.fetch : fetch
 
     let fetchData: Promise<any> = fetchLocal(url, finalOptions)
 
@@ -257,7 +250,7 @@ export default class Controller<
     }
     options = {
       ...options,
-      method: 'GET'
+      method: 'GET',
     }
     return this.fetch(url, options)
   }
@@ -265,15 +258,11 @@ export default class Controller<
    *
    * 封装 post 请求，方便使用
    */
-  post(
-    url: string,
-    data?: any,
-    options?: FetchOptions
-  ) {
+  post(url: string, data?: any, options?: FetchOptions) {
     options = {
       ...options,
       method: 'POST',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     }
     return this.fetch(url, options)
   }
@@ -289,7 +278,7 @@ export default class Controller<
     }
 
     let { context } = this
-    let list = keys.map(name => {
+    let list = keys.map((name) => {
       if ((context.preload as Preload)[name]) {
         return
       }
@@ -306,7 +295,7 @@ export default class Controller<
 
       return fetch(url)
         .then(_.toText)
-        .then(content => {
+        .then((content) => {
           if (url.split('?')[0].indexOf('.css') !== -1) {
             /**
              * 如果是 CSS ，清空回车符
@@ -314,9 +303,9 @@ export default class Controller<
              */
             content = content.replace(/\r+/g, '')
           }
-          (context.preload as Preload)[name] = content
+          ;(context.preload as Preload)[name] = content
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(`preload resource failed: ${name}`, err)
         })
     })
@@ -404,7 +393,7 @@ export default class Controller<
       }
     }
   }
-  
+
   reload() {
     // if not remove controller cache, it will not reload correctly, it will restore instead of reload
     this.removeFromCache()
@@ -412,11 +401,7 @@ export default class Controller<
   }
 
   // 封装 cookie 的同构方法
-  cookie(
-    key: string,
-    value?: string,
-    options?: Cookie.CookieAttributes
-  ) {
+  cookie(key: string, value?: string, options?: Cookie.CookieAttributes) {
     if (!value) {
       return this.getCookie(key)
     }
@@ -432,20 +417,14 @@ export default class Controller<
     }
   }
 
-  setCookie(
-    key: string,
-    value: string,
-    options?: Cookie.CookieAttributes
-  ) {
+  setCookie(key: string, value: string, options?: Cookie.CookieAttributes) {
     let { context } = this
 
     if (options && options.expires) {
       let isDateInstance = options.expires instanceof Date
       if (!isDateInstance) {
         throw new Error(
-          `cookie 的过期时间 expires 必须为 Date 的实例，而不是 ${
-          options.expires
-          }`
+          `cookie 的过期时间 expires 必须为 Date 的实例，而不是 ${options.expires}`
         )
       }
     }
@@ -458,10 +437,7 @@ export default class Controller<
     }
   }
 
-  removeCookie(
-    key: string,
-    options?: Cookie.CookieAttributes
-  ) {
+  removeCookie(key: string, options?: Cookie.CookieAttributes) {
     let { context } = this
 
     if (context.isServer) {
@@ -526,15 +502,11 @@ export default class Controller<
     this.fetch = this.fetch.bind(this)
     this.prefetch = this.prefetch.bind(this)
 
-    let actions: AS = this.actions || {} as AS
-    let initialState: S = this.initialState || {} as S
+    let actions: AS = this.actions || ({} as AS)
+    let initialState: S = this.initialState || ({} as S)
 
     // 如果 Model 存在，且 initialState 和 actions 不存在，从 Model 里解构出来
-    if (
-      this.Model
-        && this.initialState === void 0
-          && this.actions === void 0
-    ) {
+    if (this.Model && this.initialState === void 0 && this.actions === void 0) {
       let { initialState: initState, ...acts } = this.Model
       initialState = this.initialState = initState
       actions = this.actions = acts
@@ -557,13 +529,13 @@ export default class Controller<
       location: this.location,
       basename: this.context.basename || '',
       publicPath: this.context.publicPath || '',
-      restapi: this.context.restapi || ''
+      restapi: this.context.restapi || '',
     }
 
     let finalInitialState: S & BaseState = {
       ...initialState,
       ...(globalInitialState || {}),
-      ...baseState
+      ...baseState,
     } as S & BaseState
 
     /**
@@ -583,9 +555,11 @@ export default class Controller<
     /**
      * 动态获取最终的 actions
      */
-    let finalActions: BaseActions & AS
-      = await this.getFinalActions({ ...shareActions, ...actions })
-    
+    let finalActions: BaseActions & AS = await this.getFinalActions({
+      ...shareActions,
+      ...actions,
+    })
+
     /**
      * 创建 store
      */
@@ -612,8 +586,10 @@ export default class Controller<
         return obj
       }, {} as any)
 
-      this.store.actions
-        = actions as unknown as Currings<S & BaseState, BaseActions & AS>
+      this.store.actions = (actions as unknown) as Currings<
+        S & BaseState,
+        BaseActions & AS
+      >
     }
 
     /**
@@ -627,7 +603,7 @@ export default class Controller<
 
       // 如果 preload 未收集到或者加载成功，重新加载一次
       let preloadedKeys: string[] = Object.keys(this.context.preload || {})
-      let isPreload: boolean = Object.keys(this.preload || {}).every(key =>
+      let isPreload: boolean = Object.keys(this.preload || {}).every((key) =>
         preloadedKeys.includes(key)
       )
 
@@ -660,18 +636,14 @@ export default class Controller<
       promiseList.push(this.fetchPreload())
     }
 
-
-
     if (promiseList.length) {
       await Promise.all(promiseList)
     }
 
-
-
     this.bindStoreWithView()
     return this.render()
   }
-  
+
   bindStoreWithView() {
     let { context, store, history, meta } = this
 
@@ -705,9 +677,7 @@ export default class Controller<
 
     // 监听路由跳转
     if (this.pageWillLeave) {
-      let unlisten = history.listenBefore(
-        this.pageWillLeave.bind(this)
-      )
+      let unlisten = history.listenBefore(this.pageWillLeave.bind(this))
       meta.unsubscribeList.push(unlisten)
     }
 
@@ -808,7 +778,7 @@ function proxyReactCreateElement(ctrl: Controller<any, any>) {
       static isErrorBoundary = true
 
       state: Partial<BaseState> = {
-        hasError: false
+        hasError: false,
       }
 
       static getDerivedStateFromError() {
@@ -832,10 +802,7 @@ function proxyReactCreateElement(ctrl: Controller<any, any>) {
           return null
         }
         let { forwardedRef, ...rest } = this.props
-        return createElement(
-          InputComponent,
-          { ...rest, ref: forwardedRef }
-        )
+        return createElement(InputComponent, { ...rest, ref: forwardedRef })
       }
     }
 
@@ -844,7 +811,7 @@ function proxyReactCreateElement(ctrl: Controller<any, any>) {
     })
 
     /**
-     * 同步 InputComponent 的静态属性/方法，一些 UI 框架，如 Ant-Design 
+     * 同步 InputComponent 的静态属性/方法，一些 UI 框架，如 Ant-Design
      * 依赖静态属性/方法去判断组件类型
      */
     Object.assign(Forwarder, InputComponent)

@@ -6,7 +6,7 @@ import { Location, Context } from '../../../../src/'
 const actions = {
   TEST: () => {
     throw new Error('action-test')
-  }
+  },
 }
 
 export default class extends Controller<{}, typeof actions> {
@@ -29,7 +29,6 @@ export default class extends Controller<{}, typeof actions> {
     setTimeout(() => {
       this.store.actions.TEST()
     })
-    
   }
 }
 

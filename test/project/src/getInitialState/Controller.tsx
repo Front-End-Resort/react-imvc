@@ -3,7 +3,7 @@ import React from 'react'
 import { Location, Context } from '../../../../src'
 
 export type State = {
-  isClient: boolean,
+  isClient: boolean
   isServer: boolean
 }
 
@@ -15,9 +15,9 @@ export default class extends Controller<State, {}> {
   View = View
   initialState = {
     isClient: false,
-    isServer: false
+    isServer: false,
   }
-  
+
   getInitialState(state: State) {
     if (this.context.isClient) {
       state.isClient = true
@@ -38,7 +38,7 @@ export default class extends Controller<State, {}> {
 
 function View({ state }: { state: State }) {
   return (
-    <div id='getInitialState'>
+    <div id="getInitialState">
       <div id="client">{'client:' + state.isClient.toString()}</div>
       <div id="server">{'server:' + state.isServer.toString()}</div>
     </div>

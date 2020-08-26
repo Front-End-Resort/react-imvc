@@ -4,11 +4,11 @@ import Controller from '../../../../src/controller'
 import { EventWrapper } from '../../../../src/component'
 
 const initialState = {
-  count: 0
+  count: 0,
 }
 
 export default class extends Controller<typeof initialState, {}> {
-	SSR = true // enable server side rendering
+  SSR = true // enable server side rendering
   View = View
   initialState = initialState
   constructor(location: Location, context: Context) {
@@ -17,15 +17,15 @@ export default class extends Controller<typeof initialState, {}> {
 
   handleClick = () => {
     this.store.actions.UPDATE_INPUT_VALUE({
-      count: this.store.getState().count + 1
+      count: this.store.getState().count + 1,
     })
   }
 }
 
 function View({ state }) {
-	return (
+  return (
     <div id="event">
-      <EventWrapper onClick='handleClick'>
+      <EventWrapper onClick="handleClick">
         <p id="inner">inner region</p>
       </EventWrapper>
       <p id="count">{state.count}</p>

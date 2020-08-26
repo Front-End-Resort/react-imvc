@@ -1,7 +1,12 @@
 import Controller from '../../../../src/controller'
 import React from 'react'
 import { Location, Context } from '../../../../src/'
-import { useCtrl, useModelActions, useModelState, useModel } from '../../../../src/hook'
+import {
+  useCtrl,
+  useModelActions,
+  useModelState,
+  useModel,
+} from '../../../../src/hook'
 import * as Model from './Model'
 
 type Actions = Omit<typeof Model, 'initialState'>
@@ -36,11 +41,15 @@ function View() {
   const handleUpdate2Click = () => {
     actions.UPDATE_FOO(state.foo + 1)
   }
-	return (
+  return (
     <div id="hook">
       <p id="foo">{ctrl.store.getState().foo}</p>
-      <button id="update1" onClick={ctrl.handleUpdate1Click}>Update</button>
-      <button id="update2" onClick={handleUpdate2Click}>Update</button>
+      <button id="update1" onClick={ctrl.handleUpdate1Click}>
+        Update
+      </button>
+      <button id="update2" onClick={handleUpdate2Click}>
+        Update
+      </button>
     </div>
   )
 }

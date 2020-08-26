@@ -3,7 +3,7 @@ import Script from '../component/Script'
 import type { RenderProps } from '..'
 
 export default function Page(props: RenderProps): JSX.Element {
-	return (
+  return (
     <html>
       <head>
         <meta charSet="utf-8" />
@@ -37,5 +37,5 @@ export default function Page(props: RenderProps): JSX.Element {
         <script src={`${props.publicPath}/${props.assets.index}`} />
       </body>
     </html>
-  );
+  )
 }

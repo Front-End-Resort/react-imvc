@@ -3,10 +3,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 import start from './start'
 import build from './build'
-export {
-  start,
-  build,
-}
+export { start, build }
 export default {
   start,
   build,
@@ -16,33 +13,27 @@ export default {
 // TYPES
 ///////////////////////////////////////////////////////////////////////////////
 import type http from 'http'
-import type yargs from "yargs"
-import type helmet from "helmet"
-import type express from "express"
-import type webpack from "webpack"
+import type yargs from 'yargs'
+import type helmet from 'helmet'
+import type express from 'express'
+import type webpack from 'webpack'
 import type bodyParser from 'body-parser'
-import type compression from "compression"
-import type serveStatic from "serve-static"
-import type cookieParser from "cookie-parser"
-import type { TransformOptions } from "@babel/core"
+import type compression from 'compression'
+import type serveStatic from 'serve-static'
+import type cookieParser from 'cookie-parser'
+import type { TransformOptions } from '@babel/core'
 import type { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import type {
   Settings,
   HistoryLocation,
   HistoryBaseLocation,
   Context as BaseContext,
-  Controller as BaseController
-} from "create-app/client"
-import type Controller from "./controller"
-import type { BaseActions as BA } from "./controller"
+  Controller as BaseController,
+} from 'create-app/client'
+import type Controller from './controller'
+import type { BaseActions as BA } from './controller'
 
-export type {
-  Action,
-  Curring,
-  Currings,
-  AnyAction,
-  Actions
-} from "relite"
+export type { Action, Curring, Currings, AnyAction, Actions } from 'relite'
 
 // Controller
 export type Location = HistoryLocation
@@ -73,10 +64,10 @@ export type Preload = Record<string, string>
 
 export type API = Record<string, string>
 
-export type SSR = boolean 
-  | { (location: Location, context: Context): Promise<boolean> } 
-    | undefined
-
+export type SSR =
+  | boolean
+  | { (location: Location, context: Context): Promise<boolean> }
+  | undefined
 
 export interface Context extends BaseContext {
   basename?: string
@@ -119,8 +110,9 @@ export interface BaseViewClass extends React.ComponentClass<ViewPropsType> {
   viewId?: any
 }
 
-export type Forwarder
-  = React.ForwardRefExoticComponent<{}> & { isErrorBoundary?: boolean }
+export type Forwarder = React.ForwardRefExoticComponent<{}> & {
+  isErrorBoundary?: boolean
+}
 
 // Render view
 export interface RenderToNodeStream<
@@ -161,7 +153,7 @@ export interface ViewPropsType<
 
 // Server
 export type Result = {
-  server: http.Server,
+  server: http.Server
   app: express.Express
 }
 
@@ -243,9 +235,9 @@ export interface Views {
 }
 
 export interface BodyParseOptions {
-  raw?: bodyParser.Options,
-  json?: bodyParser.OptionsJson,
-  text?: bodyParser.OptionsText,
+  raw?: bodyParser.Options
+  json?: bodyParser.OptionsJson
+  text?: bodyParser.OptionsText
   urlencoded?: bodyParser.OptionsUrlencoded
 }
 
@@ -374,7 +366,7 @@ export interface EntireConfig {
   /**
    * webpack devtool 配置
    */
-  devtool: webpack.Options.Devtool | ""
+  devtool: webpack.Options.Devtool | ''
 
   /**
    * 是否开启 webpack 的构建产物进行可视化分析
@@ -440,7 +432,7 @@ export interface EntireConfig {
    * express logger 配置
    * 默认在开发阶段使用 dev，生产阶段不使用
    */
-  logger: "dev" | null
+  logger: 'dev' | null
   /**
    * express favicon 中间件的配置
    * 默认没有 favicon
@@ -467,7 +459,7 @@ export interface EntireConfig {
    * React SSR 时采用的渲染模式：renderToString || renderToNodeStream
    *
    */
-  renderMode: "renderToNodeStream" | "renderToString"
+  renderMode: 'renderToNodeStream' | 'renderToString'
   /**
    * IMVC APP 里的 context 参数
    * server 端和 client 端都会接收到 config.context 里的配置

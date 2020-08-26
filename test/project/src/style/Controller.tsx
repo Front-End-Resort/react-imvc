@@ -4,10 +4,10 @@ import Controller from '../../../../src/controller'
 import { Style } from '../../../../src/component'
 
 export default class extends Controller<{}, {}> {
-	SSR = true // enable server side rendering
+  SSR = true // enable server side rendering
   View = View
   preload = {
-    css: '/style/preload.css'
+    css: '/style/preload.css',
   }
   constructor(location: Location, context: Context) {
     super(location, context)
@@ -15,13 +15,13 @@ export default class extends Controller<{}, {}> {
 
   handleClick = () => {
     this.store.actions.UPDATE_INPUT_VALUE({
-      count: this.store.getState().count + 1
+      count: this.store.getState().count + 1,
     })
   }
 }
 
 function View() {
-	return (
+  return (
     <div id="style">
       <Style name="css" />
       <div className="style"></div>

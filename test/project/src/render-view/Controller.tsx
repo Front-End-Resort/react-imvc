@@ -3,19 +3,20 @@ import { Location, Context } from '../../../../src/'
 import Controller from '../../../../src/controller'
 
 declare global {
-    module NodeJS {
-        interface Global {
-            controller: any
-        }
+  module NodeJS {
+    interface Global {
+      controller: any
     }
-    interface Window {
-        controller: any
-    }
+  }
+  interface Window {
+    controller: any
+  }
 }
 
-const delay = (time: number) => new Promise(resolve => {
-  setTimeout(resolve, time)
-})
+const delay = (time: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, time)
+  })
 
 export default class extends Controller<{}, {}> {
   SSR = false

@@ -9,7 +9,7 @@ export const INDENTITY: Action<object> = (state) => state
 export const UPDATE_STATE: Action<object, object> = (state, newState) => {
   return {
     ...state,
-    ...newState
+    ...newState,
   }
 }
 
@@ -19,11 +19,13 @@ export const __PAGE_DID_BACK__: Action<object, Location> = (
 ) => {
   return {
     ...state,
-    location
+    location,
   }
 }
 
-interface USBPPayload { [x: string]: any }
+interface USBPPayload {
+  [x: string]: any
+}
 export const UPDATE_STATE_BY_PATH: Action<object, USBPPayload> = (
   state,
   payload

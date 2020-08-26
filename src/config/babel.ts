@@ -10,8 +10,8 @@ export default function Babel(): TransformOptions {
       {
         isTSX: true,
         allExtensions: true,
-        allowNamespaces: true
-      }
+        allowNamespaces: true,
+      },
     ],
   ]
   let plugins: PluginItem[] = [
@@ -43,6 +43,6 @@ export default function Babel(): TransformOptions {
 
   return {
     presets,
-    plugins
+    plugins,
   }
 }

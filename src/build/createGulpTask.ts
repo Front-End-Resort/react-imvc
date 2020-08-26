@@ -18,49 +18,51 @@ function createConfig(options: EntireConfig): GulpTaskConfig {
   let config: GulpTaskConfig = {
     css: {
       src: [src + '/**/*.css'],
-      dest: staticPath
+      dest: staticPath,
     },
     html: {
       src: [src + '/**/*.@(html|htm)'],
-      dest: staticPath
+      dest: staticPath,
     },
     js: {
       src: [
         src + '/lib/!(es5)/**/*.@(js|ts|jsx|tsx)',
-        src + '/lib/*.@(js|ts|jsx|tsx)'
+        src + '/lib/*.@(js|ts|jsx|tsx)',
       ],
-      dest: staticPath + '/lib'
+      dest: staticPath + '/lib',
     },
     es5: {
       src: [src + '/lib/es5/**/*.@(js|ts|jsx|tsx)'],
-      dest: staticPath + '/lib/es5'
+      dest: staticPath + '/lib/es5',
     },
     copy: {
       src: [src + '/**/!(*.@(html|htm|css|js|ts|jsx|tsx))'],
-      dest: staticPath
+      dest: staticPath,
     },
     publishCopy: {
       src: [
-        root + (/^[a-zA-Z]+$/.test(options.publish)
-          ? `/!(node_modules|${options.publish}|buildportal-script)/**/*`
-          : `/!(node_modules|buildportal-script)/**/*`),
-        root + (/^[a-zA-Z]+$/.test(options.publish)
-          ? `/!(node_modules|${options.publish}|buildportal-script)`
-          : `/!(node_modules|buildportal-script)`)
+        root +
+          (/^[a-zA-Z]+$/.test(options.publish)
+            ? `/!(node_modules|${options.publish}|buildportal-script)/**/*`
+            : `/!(node_modules|buildportal-script)/**/*`),
+        root +
+          (/^[a-zA-Z]+$/.test(options.publish)
+            ? `/!(node_modules|${options.publish}|buildportal-script)`
+            : `/!(node_modules|buildportal-script)`),
       ],
-      dest: publish
+      dest: publish,
     },
     publishBabel: {
       src: [
         root +
-        `/!(node_modules|${
-          /^[a-zA-Z]+$/.test(options.publish) ? options.publish + '|' : ''
-        }buildportal-script)/**/*.@(js|ts|jsx|tsx)`,
+          `/!(node_modules|${
+            /^[a-zA-Z]+$/.test(options.publish) ? options.publish + '|' : ''
+          }buildportal-script)/**/*.@(js|ts|jsx|tsx)`,
         publish + '/*.@(js|ts|jsx|tsx)',
-        root + '/*.@(js|ts|jsx|tsx)'
+        root + '/*.@(js|ts|jsx|tsx)',
       ],
-      dest: publish
-    }
+      dest: publish,
+    },
   }
 
   for (let key in options.gulp) {
@@ -91,17 +93,14 @@ export default function createGulpTask(
       .src(config.css.src)
       .pipe(plumber())
       .pipe(
-        cleanCSS(
-          {},
-          (details: Record<string, any>) => {
-            let percent = (
-              (details.stats.minifiedSize / details.stats.originalSize) *
-              100
-            ).toFixed(2)
-            let message = `${details.name}(${chalk.green(percent)}%)`
-            log('gulp-clean-css:', message)
-          }
-        )
+        cleanCSS({}, (details: Record<string, any>) => {
+          let percent = (
+            (details.stats.minifiedSize / details.stats.originalSize) *
+            100
+          ).toFixed(2)
+          let message = `${details.name}(${chalk.green(percent)}%)`
+          log('gulp-clean-css:', message)
+        })
       )
       .pipe(gulp.dest(config.css.dest))
   }
@@ -115,7 +114,7 @@ export default function createGulpTask(
       .pipe(plumber())
       .pipe(
         htmlmin({
-          collapseWhitespace: true
+          collapseWhitespace: true,
         })
       )
       .pipe(gulp.dest(config.html.dest))
@@ -179,10 +178,10 @@ export default function createGulpTask(
     config.html && minifyHTML,
     config.css && minifyCSS,
     config.es5 && minifyES5,
-    config.js && minifyES6
+    config.js && minifyES6,
   ].filter(Boolean)
 
-  let seriesList  = [
+  let seriesList = [
     config.publishCopy && publishCopy,
     config.publishBabel && publishBabel,
     config.copy && copy,

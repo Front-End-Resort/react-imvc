@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === 'development') {
   let config = getConfig(yargs.argv)
   require('@babel/register')({
     ...config.babel(),
-    extensions: ['.es6', '.es', '.jsx', '.js', '.mjs', '.ts', '.tsx']
+    extensions: ['.es6', '.es', '.jsx', '.js', '.mjs', '.ts', '.tsx'],
   })
 }
 

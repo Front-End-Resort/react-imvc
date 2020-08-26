@@ -7,7 +7,7 @@ import type { Location } from '..'
 
 const withLocation = connect(({ state }) => {
   return {
-    location: state.location
+    location: state.location,
   }
 })
 
@@ -18,7 +18,7 @@ export interface NavLinkProps {
   location: Location
   className?: string
   activeClassName?: string
-	children?: React.ReactChild
+  children?: React.ReactChild
   style?: object
   activeStyle?: object
   to: string | BaseLocation
@@ -26,12 +26,12 @@ export interface NavLinkProps {
 }
 
 export interface GetIsActive {
-  (path: string | BaseLocation, location: Location,): boolean
+  (path: string | BaseLocation, location: Location): boolean
 }
 
 function NavLink(props: NavLinkProps) {
   let {
-    isActive:  getIsActive,
+    isActive: getIsActive,
     location,
     className,
     children,
@@ -45,12 +45,9 @@ function NavLink(props: NavLinkProps) {
   let finalClassName = classnames(className, isActive && activeClassName)
   let finalStyle = isActive ? { ...style, ...activeStyle } : style
   return (
-    <Link
-      to={to}
-      className={finalClassName}
-      style={finalStyle}
-      {...rest}
-    >{children}</Link>
+    <Link to={to} className={finalClassName} style={finalStyle} {...rest}>
+      {children}
+    </Link>
   )
 }
 
@@ -59,7 +56,5 @@ function checkActive(
   location: Location,
   getIsActive?: GetIsActive
 ) {
-  return getIsActive
-    ? !!getIsActive(path, location)
-    : path === location.raw
+  return getIsActive ? !!getIsActive(path, location) : path === location.raw
 }

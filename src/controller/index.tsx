@@ -141,6 +141,7 @@ export default class Controller<
      */
     if (location) {
       this.meta.key = location.key
+      // @ts-ignore
       delete location.key
     }
     this.location = location

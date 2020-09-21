@@ -126,9 +126,20 @@ function getFileInfo(filePath: string): [string, Extension] {
   return [finalFilePath, extension]
 }
 
-function runCode(sourceCode: string, context?: vm.Context) {
-  if (context) {
-    return vm.runInContext(sourceCode, context)
-  }
-  return vm.runInThisContext(sourceCode)(require)
+function runCode(sourceCode: string, context: vm.Context) {
+  sourceCode = sourceCode.replace('"use strict";', '')
+  return Function(`
+    "use strict";
+    return(function({
+      process,
+      __filename,
+      __dirname,
+      exports,
+      require,
+      module
+    }){
+      ${sourceCode}
+      return exports.default
+    })
+  `)()(context)
 }

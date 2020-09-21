@@ -13,20 +13,24 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
 export default function build(options: Options): Promise<EntireConfig | void> {
-  let config = getConfig(options, true)
-  let delPublicPgs = () => delPublish(path.join(config.root, config.publish))
-  let startGulpPgs = () => startGulp(config)
-  let startWebpackPgs = () =>
+  const config = getConfig(options, true)
+  const delPublicPgs = () => delPublish(path.join(config.root, config.publish))
+  const startGulpPgs = () => startGulp(config)
+  const startWebpackPgs = () =>
     Promise.all(
       [
         startWebpackForClient(config),
         config.useServerBundle && startWebpackForServer(config),
       ].filter(Boolean)
     )
-  let startStaticEntryPgs = () => startStaticEntry(config)
-  let errorHandler = (error: Error) => {
+  const startStaticEntryPgs = () => startStaticEntry(config)
+  const errorHandler = (error: Error) => {
     console.error(error)
     process.exit(1)
+  }
+  const finalHandler = () => {
+    console.log('build successfully!')
+    process.exit(0)
   }
 
   return Promise.resolve()
@@ -35,6 +39,7 @@ export default function build(options: Options): Promise<EntireConfig | void> {
     .then(startWebpackPgs)
     .then(startStaticEntryPgs)
     .catch(errorHandler)
+    .finally(finalHandler)
 }
 
 function delPublish(folder: string): Promise<string[]> {

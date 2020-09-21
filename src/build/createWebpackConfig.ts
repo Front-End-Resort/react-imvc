@@ -7,7 +7,7 @@ import PnpWebpackPlugin from 'pnp-webpack-plugin'
 import ManifestPlugin from 'webpack-manifest-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import { getExternals, fixWebpackConfig } from './util'
+import { getExternals } from './util'
 import type { EntireConfig } from '..'
 
 export default function createWebpackConfig(
@@ -289,5 +289,5 @@ export default function createWebpackConfig(
     result = config.webpack(result, isServer)
   }
 
-  return fixWebpackConfig(result)
+  return result
 }

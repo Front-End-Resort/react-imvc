@@ -1,9 +1,5 @@
 import webpack from 'webpack'
-import {
-  matchExternals,
-  getExternals,
-  fixRuleSetCondition,
-} from '../src/build/util'
+import { matchExternals, getExternals } from '../src/build/util'
 import createWebpackConfig from '../src/build/createWebpackConfig'
 import defaultConfig from '../src/config/config.defaults'
 const pkg = require('../package.json')
@@ -263,29 +259,6 @@ describe('build', () => {
         list.forEach((item) => {
           expect(matchExternals(externals, item.value)).toBe(item.result)
         })
-      })
-    })
-
-    describe('fixRuleSetCondition', () => {
-      it('regexp should not break its function', () => {
-        const condition1 = fixRuleSetCondition(/\.tsx$/) as RegExp
-        expect(condition1.test('foo.tsx')).toBeTruthy()
-
-        const condition2 = fixRuleSetCondition(
-          /\.(js|mjs|jsx|ts|tsx)$/
-        ) as RegExp
-        expect(condition2.test('foo.js')).toBeTruthy()
-        expect(condition2.test('foo.mjs')).toBeTruthy()
-        expect(condition2.test('foo.jsx')).toBeTruthy()
-        expect(condition2.test('foo.ts')).toBeTruthy()
-        expect(condition2.test('foo.tsx')).toBeTruthy()
-      })
-
-      it('function shoukd work', () => {
-        const condition1 = fixRuleSetCondition((path) =>
-          /\.tsx$/.test(path)
-        ) as (path: string) => boolean
-        expect(condition1('foo.tsx')).toBeTruthy()
       })
     })
   })

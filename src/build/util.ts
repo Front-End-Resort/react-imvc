@@ -1,5 +1,4 @@
 import path from 'path'
-import type { Configuration, RuleSetCondition } from 'webpack'
 import type { EntireConfig } from '..'
 
 export function getExternals(config: EntireConfig): string[] {
@@ -52,89 +51,4 @@ export function matchExternals(
     }
   }
   return false
-}
-
-export function fixRuleSetCondition(test: RuleSetCondition): RuleSetCondition {
-  if (isRegExp(test)) {
-    const str = test.toString()
-    return RegExp(str.slice(1, str.length - 1))
-  } else if (typeof test === 'string') {
-    return test + ''
-  } else if (isFunction(test)) {
-    return function (path) {
-      return test(path)
-    }
-  } else if (isArray(test)) {
-    return Array.from(test).map(fixRuleSetCondition)
-  } else if (isObject(test)) {
-    let newTest: RuleSetCondition = {}
-    if (test.and) {
-      newTest.and = Array.from(test.and).map(fixRuleSetCondition)
-    }
-    if (test.exclude) {
-      newTest.exclude = fixRuleSetCondition(test.exclude)
-    }
-    if (test.include) {
-      newTest.include = fixRuleSetCondition(test.include)
-    }
-    if (test.not) {
-      newTest.not = Array.from(test.not).map(fixRuleSetCondition)
-    }
-    if (test.or) {
-      newTest.or = Array.from(test.or).map(fixRuleSetCondition)
-    }
-    if (test.test) {
-      newTest.test = fixRuleSetCondition(test.test)
-    }
-    return newTest
-  } else {
-    return test
-  }
-}
-
-export function fixWebpackConfig(config: Configuration) {
-  if (config.module) {
-    config.module.rules = config.module.rules.map((rule) => {
-      if (rule.test) {
-        rule.test = fixRuleSetCondition(rule.test)
-      }
-      if (rule.include) {
-        rule.include = fixRuleSetCondition(rule.include)
-      }
-      if (rule.exclude) {
-        rule.exclude = fixRuleSetCondition(rule.exclude)
-      }
-      if (rule.issuer) {
-        rule.issuer = fixRuleSetCondition(rule.issuer)
-      }
-      if (rule.resource) {
-        rule.resource = fixRuleSetCondition(rule.resource)
-      }
-      if (rule.resourceQuery) {
-        rule.resourceQuery = fixRuleSetCondition(rule.resourceQuery)
-      }
-      if (rule.compiler) {
-        rule.compiler = fixRuleSetCondition(rule.compiler)
-      }
-      return rule
-    })
-  }
-  return config
-}
-
-function isRegExp(input: any): input is RegExp {
-  return Object.prototype.toString.call(input) === '[object RegExp]'
-}
-
-function isFunction(input: any): input is Function {
-  return Object.prototype.toString.call(input) === '[object Function]'
-}
-
-function isArray(input: any): input is Array<any> {
-  Array.isArray
-  return Object.prototype.toString.call(input) === '[object Array]'
-}
-
-function isObject(input: any): input is Function {
-  return Object.prototype.toString.call(input) === '[object Object]'
 }

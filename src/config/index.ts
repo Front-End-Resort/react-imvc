@@ -53,8 +53,6 @@ function constructConfig(
         ? requireConfig(path.resolve(options.config))
         : require(path.resolve(options.config))
       break
-    default:
-      throw new Error(`Config in options is incorrect type(string or object).`)
   }
   return Object.assign({}, defaultConfig, config)
 }

@@ -39,6 +39,10 @@ export default function getConfig(
   return (configCache = constructConfig(options, shouldCompile))
 }
 
+function _interopRequireDefault(obj: any) {
+  return obj && obj.__esModule ? obj : { default: obj }
+}
+
 function constructConfig(
   options: Options,
   shouldCompile: boolean
@@ -50,8 +54,9 @@ function constructConfig(
       break
     case 'string':
       config = shouldCompile
-        ? requireConfig(path.resolve(options.config))
-        : require(path.resolve(options.config))
+        ? _interopRequireDefault(requireConfig(path.resolve(options.config)))
+            .default
+        : _interopRequireDefault(require(path.resolve(options.config))).default
       break
   }
   return Object.assign({}, defaultConfig, config)
@@ -137,7 +142,7 @@ function runCode(sourceCode: string, context: vm.Context) {
       module
     }){
       ${sourceCode}
-      return exports.default
+      return module.exports
     })
   `)()(context)
 }

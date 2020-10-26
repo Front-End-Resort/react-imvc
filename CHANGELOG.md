@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## 3.0.11
+
+> 2020/10/22
+
+* **fix**: cannot resole commonjs module file
+
+## 3.0.10
+
+> 2020/10/16
+
+* **feat**: support `typescript@4.0`
+* **fix**: 在 build 任务中手动退出进程，防止进程悬挂
+* **fix**: cannot start without config
+
+## 3.0.9
+
+> 2020/8/14
+
+* **fix**: native context
+
+## 3.0.8
+
+> 2020/8/14
+
+* **feat**: support `babel@7.10`
+* **fix**: webpack run from vm
+
 ## 3.0.7
 
 > 2020/5/28

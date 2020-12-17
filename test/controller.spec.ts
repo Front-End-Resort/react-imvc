@@ -652,34 +652,5 @@ describe('controller', () => {
         await page.close()
       })
     })
-
-    describe('dynamic import without loader', () => {
-      it('should render in server side', async () => {
-        const page = await browser.newPage()
-        const url = `http://localhost:${config.port}/es6_dynamic`
-        await page.goto(url)
-        await page.waitFor('#es6_dynamic')
-
-        const serverContent = await fetchContent(url)
-        expect(serverContent.includes('es6 dynamic content')).toBeTruthy()
-
-        await page.close()
-      })
-
-      it('should render in client side', async () => {
-        const page = await browser.newPage()
-        const url = `http://localhost:${config.port}/es6_dynamic`
-        await page.goto(url)
-        await page.waitFor('#es6_dynamic')
-
-        const clientContent = await page.$eval(
-          '#es6_dynamic',
-          (e) => e.innerHTML
-        )
-        expect(clientContent.includes('es6 dynamic content')).toBeTruthy()
-
-        await page.close()
-      })
-    })
   })
 })

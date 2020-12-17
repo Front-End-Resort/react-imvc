@@ -6,8 +6,6 @@ import ReactDOM from 'react-dom'
 import createApp from 'create-app/client'
 import Controller from '../controller'
 import { getFlatList } from '../util'
-// @ts-ignore
-import $routes from '@routes'
 import type {
   LoadController,
   ControllerConstructor,
@@ -38,14 +36,32 @@ const __APP_SETTINGS__: AppSettings = window.__APP_SETTINGS__
 function getModule(module: any) {
   return module.default || module
 }
+function isIMVCController(fn: any): fn is Controller<any, any> {
+  return fn.__SYMBOL === 'REACT_IMVC_CONTROLLER'
+}
+function isThenable<T, S>(
+  input: PromiseLike<T> | S
+): input is PromiseLike<T> {
+  // @ts-ignore
+  return input && input.then && typeof input.then === 'function'
+}
 function webpackLoader(
   controller: LoadController,
   location?: HistoryLocation,
   context?: Context
 ): ControllerConstructor | Promise<ControllerConstructor> {
-  return (controller(location, context) as Promise<ControllerConstructor>).then(
-    getModule
-  )
+  let ctrl = null
+  if (isIMVCController(controller) || isThenable(controller)) {
+    ctrl = controller
+  } else {
+    ctrl = controller(location, context)
+  }
+
+  if (isThenable(ctrl)) {
+    return (ctrl as Promise<ControllerConstructor>).then(getModule)
+  } else {
+    return getModule(ctrl)
+  }
 }
 
 let shouldHydrate = !!window.__INITIAL_STATE__
@@ -96,6 +112,7 @@ function render(
 }
 const viewEngine: ViewEngine<React.ReactElement, BaseController> = { render }
 
+const $routes = require('@routes')
 const routes = getFlatList(
   Array.isArray($routes) ? $routes : Object.values($routes)
 )

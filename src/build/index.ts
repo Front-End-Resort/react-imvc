@@ -17,12 +17,14 @@ export default function build(options: Options): Promise<EntireConfig | void> {
   const delPublicPgs = () => delPublish(path.join(config.root, config.publish))
   const startGulpPgs = () => startGulp(config)
   const startWebpackPgs = () =>
-    Promise.all(
-      [
-        startWebpackForClient(config),
-        config.useServerBundle && startWebpackForServer(config),
-      ].filter(Boolean)
-    )
+    config.useServerBundle
+      ? new Promise((resolve) => {
+          Promise.all([
+            startWebpackForClient(config),
+            startWebpackForServer(config),
+          ]).then(resolve)
+        })
+      : startWebpackForClient(config)
   const startStaticEntryPgs = () => startStaticEntry(config)
   const errorHandler = (error: Error) => {
     console.error(error)
@@ -47,9 +49,7 @@ function delPublish(folder: string): Promise<string[]> {
   return del(folder)
 }
 
-function startWebpackForClient(
-  config: EntireConfig
-): Promise<EntireConfig | boolean> {
+function startWebpackForClient(config: EntireConfig): Promise<void> {
   let webpackConfig = createWebpackConfig(config, false)
   return new Promise((resolve, reject) => {
     webpack(webpackConfig, (error, stats) => {
@@ -68,7 +68,7 @@ function startWebpackForClient(
   })
 }
 
-function startWebpackForServer(config: EntireConfig): Promise<EntireConfig> {
+function startWebpackForServer(config: EntireConfig): Promise<void> {
   let webpackConfig = createWebpackConfig(config, true)
   return new Promise((resolve, reject) => {
     webpack(webpackConfig, (error, stats) => {
@@ -87,24 +87,21 @@ function startWebpackForServer(config: EntireConfig): Promise<EntireConfig> {
   })
 }
 
-function startGulp(config: EntireConfig): Promise<EntireConfig> {
+function startGulp(config: EntireConfig): Promise<void> {
   return new Promise((resolve, reject) => {
     gulp.task('default', createGulpTask(config))
 
-    let taskFunction: gulp.TaskFunction = (error) => {
+    gulp.series('default')((error) => {
       if (error) {
         reject(error)
       } else {
         resolve()
       }
-    }
-    gulp.series('default')(taskFunction)
+    })
   })
 }
 
-async function startStaticEntry(
-  config: EntireConfig
-): Promise<EntireConfig | void> {
+async function startStaticEntry(config: EntireConfig): Promise<void> {
   if (!config.staticEntry) {
     return
   }
@@ -140,7 +137,7 @@ async function startStaticEntry(
 
   server.close(() => console.log('finish generating static entry file'))
 
-  return new Promise<EntireConfig>((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     type ErrorCallback = (err: NodeJS.ErrnoException | null) => void
 
     let callback: ErrorCallback = (error) => {

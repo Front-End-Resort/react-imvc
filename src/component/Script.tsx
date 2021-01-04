@@ -8,7 +8,7 @@ export default function Script({ children = '' }: ScriptProps) {
   return (
     <script
       dangerouslySetInnerHTML={{
-        __html: children
+        __html: children.replace(/<\/script/gi, '&lt/script')
       }}
     />
   )

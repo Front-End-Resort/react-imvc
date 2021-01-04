@@ -59,7 +59,7 @@ function startWebpackForClient(config: EntireConfig): Promise<void> {
         if (config.webpackLogger) {
           console.log(
             '[webpack:client:build]',
-            stats.toString(config.webpackLogger)
+            stats!.toString(config.webpackLogger)
           )
         }
         resolve()
@@ -78,7 +78,7 @@ function startWebpackForServer(config: EntireConfig): Promise<void> {
         if (config.webpackLogger) {
           console.log(
             '[webpack:server:build]',
-            stats.toString(config.webpackLogger)
+            stats!.toString(config.webpackLogger)
           )
         }
         resolve()

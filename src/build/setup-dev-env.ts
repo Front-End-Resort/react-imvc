@@ -2,7 +2,6 @@ import vm from 'vm'
 import path from 'path'
 import MFS from 'memory-fs'
 import webpack from 'webpack'
-import notifier from 'node-notifier'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import nodeExternals from 'webpack-node-externals'
 import createWebpackConfig from './createWebpackConfig'
@@ -20,17 +19,7 @@ export function setupClient(
   let compiler = webpack(clientConfig)
   let middleware = webpackDevMiddleware(compiler, {
     publicPath: config.staticPath,
-    stats: config.webpackLogger,
     serverSideRender: true,
-    reporter: (middlewareOptions, options) => {
-      reporter(middlewareOptions, options)
-      if (config.notifier) {
-        notifier.notify({
-          title: 'React-IMVC',
-          message: 'Webpack 编译结束',
-        })
-      }
-    },
   })
   return {
     middleware,
@@ -75,12 +64,12 @@ export function setupServer(
     serverConfig.output.path as string,
     serverConfig.output.filename as string
   )
-  serverCompiler.outputFileSystem = mfs
+  serverCompiler.outputFileSystem = mfs as any
   serverCompiler.watch({}, (err, stats) => {
     if (err) throw err
-    let currentStats = stats.toJson()
-    currentStats.errors.forEach((err) => console.error(err))
-    currentStats.warnings.forEach((err) => console.warn(err))
+    let currentStats = stats!.toJson()
+    currentStats.errors.forEach((err: any) => console.error(err))
+    currentStats.warnings.forEach((err: any) => console.warn(err))
     let sourceCode: string = mfs.readFileSync(outputPath, 'utf-8')
     let defaultModuleResult = Symbol('default-module-result')
     let virtualRequire = (modulePath: string) => {

@@ -353,12 +353,12 @@ export interface EntireConfig {
    * webpack output 自定义配置
    * 默认为空
    */
-  output: webpack.Output
+  output: webpack.Configuration['output']
   /**
    * webpack 生产环境构建时的自定义 output 配置
    * 默认为空
    */
-  productionOutput: webpack.Output
+  productionOutput: webpack.Configuration['output']
   /**
    * webpack alias 自定义配置
    */
@@ -366,7 +366,7 @@ export interface EntireConfig {
   /**
    * webpack devtool 配置
    */
-  devtool: webpack.Options.Devtool | ''
+  devtool: webpack.Configuration['devtool']
 
   /**
    * 是否开启 webpack 的构建产物进行可视化分析
@@ -383,7 +383,7 @@ export interface EntireConfig {
    * webpack plugins 自定义配置
    * 默认为空
    */
-  webpackPlugins: webpack.Plugin[]
+  webpackPlugins: webpack.WebpackPluginInstance[]
   /**
    * webpack loaders 自定义配置
    * 默认为空
@@ -393,7 +393,7 @@ export interface EntireConfig {
   /**
    * 是否输出 webpack log 日志
    */
-  webpackLogger: webpack.Stats.ToStringOptions
+  webpackLogger: any
 
   // babel config
   babel: GetBabelFunc
@@ -493,7 +493,7 @@ export interface EntireConfig {
   /**
    * 性能优化配置
    */
-  performance?: webpack.Options.Performance
+  performance?: webpack.Configuration['performance']
   /**
    * webpack配置处理
    */
@@ -504,5 +504,5 @@ export interface EntireConfig {
   /**
    * 编译入口
    */
-  entry?: string | string[] | webpack.Entry | webpack.EntryFunc
+  entry?: webpack.Configuration['entry']
 }

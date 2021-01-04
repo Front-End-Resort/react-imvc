@@ -37,7 +37,7 @@ const defaultConfig: EntireConfig = {
   SSR: true,
   renderMode: 'renderToNodeStream',
 
-  devtool: isDev ? 'cheap-module-eval-source-map' : '',
+  devtool: isDev ? 'eval-cheap-module-source-map' : '',
   webpackDevMiddleware: isDev,
   hot: false,
 

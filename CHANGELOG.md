@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 3.0.12
+
+> 2021/01/04
+
+* **fix**: cannot load es6 module with dynamic
+* **perf**: add htmlescape
+
 ## 3.0.11
 
 > 2020/10/22

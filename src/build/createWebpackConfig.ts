@@ -13,7 +13,7 @@ export default function createWebpackConfig(
   options: EntireConfig,
   isServer: boolean = false
 ): webpack.Configuration {
-  let result: webpack.Configuration = {}
+  {}
 
   const config: EntireConfig = Object.assign({}, options)
   const root: string = path.join(config.root, config.src)
@@ -24,7 +24,7 @@ export default function createWebpackConfig(
   const NODE_ENV = process.env.NODE_ENV
   const isProd = NODE_ENV === 'production'
   const isDev = NODE_ENV === 'development'
-  const mode = NODE_ENV === 'test' ? 'development' : NODE_ENV || 'production'
+  const mode: webpack.Configuration['mode'] = NODE_ENV === 'test' || NODE_ENV === 'development' ? 'development' : 'production'
   const entry = Object.assign({}, config.entry, {
     index: [
       !!config.hot && !isServer && 'webpack-hot-middleware/client',
@@ -130,7 +130,7 @@ export default function createWebpackConfig(
           infrastructure: 'silent',
         },
       }),
-  ].filter(Boolean)
+  ].filter(Boolean) as webpack.WebpackPluginInstance[]
 
   // 添加热更新插件
   if (isDev && !isServer && config.hot) {
@@ -251,7 +251,7 @@ export default function createWebpackConfig(
     strictExportPresence: true,
     rules: moduleRulesConfig,
   }
-  const performanceConfig = {
+  const performanceConfig: webpack.Configuration['performance'] = {
     hints: false,
     maxEntrypointSize: 400000,
     ...config.performance,
@@ -261,7 +261,7 @@ export default function createWebpackConfig(
     extensions: ['.js', '.jsx', '.json', '.mjs', '.ts', '.tsx'],
     alias: alias,
   }
-  result = Object.assign(result, {
+  let result: webpack.Configuration = {
     target: isServer ? 'node' : 'web',
     mode: mode,
     // Don't attempt to continue if there are any errors.
@@ -276,7 +276,25 @@ export default function createWebpackConfig(
     resolve: resolveConfig,
     context: root,
     externals: isServer ? getExternals(config) : void 0,
-  })
+    stats: {
+      colors: true,
+      all: true,
+
+      assets: true,
+      assetsSort: 'id',
+
+      modules: true,
+      modulesSpace: 12,
+      providedExports: false,
+
+      chunks: false,
+      source: false,
+
+      preset: 'verbose',
+      logging: 'info',
+      usedExports: false,
+    }
+  }
 
   if (!!config.webpack) {
     result = config.webpack(result, isServer)

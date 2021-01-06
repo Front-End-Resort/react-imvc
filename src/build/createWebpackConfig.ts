@@ -13,8 +13,6 @@ export default function createWebpackConfig(
   options: EntireConfig,
   isServer: boolean = false
 ): webpack.Configuration {
-  {}
-
   const config: EntireConfig = Object.assign({}, options)
   const root: string = path.join(config.root, config.src)
   const alias = Object.assign({}, config.alias, {

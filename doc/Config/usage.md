@@ -8,13 +8,12 @@
 
 ```ts
 import path from 'path'
-import { Config } from '../../src'
-import cf from './config'
+import { defineConfig } from 'react-imvc'
 
 let PORT = 33336
 const ROOT = __dirname
 
-const config: Config = {
+const config = defineConfig({
   root: ROOT, // 项目根目录
   port: PORT, // server 端口号
   routes: 'routes', // 服务端路由目录
@@ -25,7 +24,7 @@ const config: Config = {
     path: path.resolve(ROOT, '../publish/static')
   },
   webpackDevMiddleware: true
-}
+})
 
 export default config
 ```
@@ -52,16 +51,16 @@ export default config
 启动文件中需要使用 React-IMVC 中暴露的接口启动，使用方式如下：
 
 ```ts
-import start from '../../src/start'
-import { Config } from '../../src/'
+import { start, defineConfig } from 'react-imvc'
+
 const PORT: number = 3333
 const ROOT = __dirname
-const config: Config = {
+const config = defineConfig({
   root: ROOT, // 项目根目录
   port: PORT, // server 端口号
   routes: 'routes', // 服务端路由目录
   layout: 'Layout', // 自定义 Layout
-}
+})
 
 async function main() {
   let { app, server } = await start({ config })

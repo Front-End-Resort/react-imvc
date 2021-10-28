@@ -25,6 +25,7 @@
     "bin",
     "component",
     "controller",
+    "config",
     "hoc",
     "hook",
     "util",

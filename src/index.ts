@@ -506,3 +506,7 @@ export interface EntireConfig {
    */
   entry?: string | string[] | webpack.Entry | webpack.EntryFunc
 }
+
+export const defineConfig = (config: Config): Config => {
+  return config
+}

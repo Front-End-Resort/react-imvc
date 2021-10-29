@@ -1,3 +1,3 @@
 import babel from '../dist/config/babel'
 export default babel
-export * from '../dist/start'
+export * from '../dist/onfig/babel'

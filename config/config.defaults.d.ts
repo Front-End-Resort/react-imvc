@@ -1,3 +1,3 @@
 import defaults from '../dist/config/config.defaults'
 export default defaults
-export * from '../dist/start'
+export * from '../dist/config/config.defaults'

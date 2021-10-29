@@ -23,14 +23,18 @@
   },
   "files": [
     "bin",
+    "build",
     "component",
+    "config",
+    "context",
     "controller",
+    "entry",
     "hoc",
     "hook",
+    "page",
+    "start",
     "util",
     "dist",
-    "index.js",
-    "index.d.ts",
     "tsconfig.json"
   ],
   "repository": {

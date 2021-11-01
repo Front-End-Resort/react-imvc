@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 3.0.15
+
+> 2021/11/01
+
+* **fix**: fix(config): export default babel config
+* **feat**: feat(config): add defineConfig
+
 ## 3.0.12
 
 > 2021/01/04

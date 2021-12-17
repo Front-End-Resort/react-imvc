@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.0.16
+
+> 2021/12/17
+
+- fix: fix `core-js` version by v3.19.3，The version of v3.20 rewrite `Error` that make some libraries crashed.
+
 ## 3.0.15
 
 > 2021/11/01

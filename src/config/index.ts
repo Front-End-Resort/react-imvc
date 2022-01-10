@@ -97,6 +97,10 @@ function createContext(filepath: string): vm.Context {
       return require(filePath)
     }
   }
+
+  // assign require methods to virtual-require
+  Object.assign(virtualRequire, require)
+
   return vm.createContext({
     ...global,
     global,

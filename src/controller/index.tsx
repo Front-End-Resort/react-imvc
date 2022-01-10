@@ -8,7 +8,6 @@ import { Actions as HistoryActions } from 'create-history'
 import * as _ from '../util'
 import * as shareActions from './actions'
 import ViewManager from '../component/ViewManager'
-import attachDevToolsIfPossible from './attachDevToolsIfPossible'
 import type { Store, Data, Actions, Currings } from 'relite'
 import type { HistoryWithBFOL, ILWithBQ, BLWithBQ } from 'create-history'
 import type {
@@ -458,7 +457,7 @@ export default class Controller<
       return await this.initialize()
     } catch (error) {
       if (error === REDIRECT) return null
-      if (this.errorDidCatch) this.errorDidCatch(error, 'controller')
+      if (this.errorDidCatch) this.errorDidCatch(error as Error, 'controller')
       if (this.getViewFallback) {
         return this.getViewFallback() || <EmptyView />
       }
@@ -565,7 +564,6 @@ export default class Controller<
      * 创建 store
      */
     this.store = createStore(finalActions, finalInitialState)
-    attachDevToolsIfPossible(this.store)
 
     // TODO
     // proxy store.actions for handling error
@@ -578,7 +576,7 @@ export default class Controller<
             return action(payload)
           } catch (error) {
             if (this.errorDidCatch) {
-              this.errorDidCatch(error, 'model')
+              this.errorDidCatch(error as Error, 'model')
             }
             throw error
           }

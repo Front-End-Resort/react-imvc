@@ -7,7 +7,7 @@ import start from '../src/start'
 jest.setTimeout(30000)
 
 process.env.NODE_ENV = 'test'
-let PORT = 33332
+let PORT = 33333
 const ROOT = path.join(__dirname, 'project')
 const config: Config = {
   root: ROOT, // 项目根目录

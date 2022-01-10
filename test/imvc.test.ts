@@ -34,7 +34,7 @@ interface App extends express.Express {
 }
 
 process.env.NODE_ENV = 'test'
-let PORT = 33334
+let PORT = 33335
 const ROOT = path.join(__dirname, 'project')
 const defaultConfig: Config = {
   root: ROOT, // 项目根目录

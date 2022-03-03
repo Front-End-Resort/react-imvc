@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.1.0
+
+- feat: 新增 `lazy` 高阶组件，支持 SSR 的异步组件
+- feat: 新增 `viewWillHydrate` 生命周期，可以在 SSR 后，CSR 之前，为 hydrate 做准备工作，如加载异步组件等
+
 ## 3.0.16
 
 > 2021/12/17

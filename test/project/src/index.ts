@@ -106,4 +106,8 @@ export default [
     path: '/es6_dynamic',
     controller: import('./es6_dynamic/Controller'),
   },
+  {
+    path: '/lazy',
+    controller: import('./lazy/controller'),
+  }
 ]

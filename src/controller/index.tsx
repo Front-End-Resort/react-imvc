@@ -92,6 +92,7 @@ export default class Controller<
   }
   shouldComponentCreate?(): void | boolean | Promise<void | boolean>
   componentWillCreate?(): void | Promise<void>
+  viewWillHydrate?(): void | Promise<void>
   componentDidFirstMount?(): void | Promise<void>
   componentDidMount?(): void | Promise<void>
   pageWillLeave?(location: ILWithBQ): void
@@ -607,6 +608,11 @@ export default class Controller<
       )
 
       if (!isPreload) await this.fetchPreload()
+
+      if (this.viewWillHydrate) {
+        await this.viewWillHydrate()
+      }
+
       return this.render()
     }
 

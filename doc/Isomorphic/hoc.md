@@ -42,3 +42,45 @@ function Loading(props) {
   )
 }
 ```
+
+
+### lazy(loader)
+
+类似于 `React.lazy`，但不需要 `Suspense` 组件包裹，它暴露了 `load` 方法，调用时会加载目标组件，否则渲染 `props.fallback`，如果没有 fallback，则默认为 null。
+
+任何时候调用 load，都会在加载组件后，更新所有当前活跃的相关 Lazy 组件。
+
+配合 `ctrl.componentWillCreate` 和 `ctrl.viewWillHydrate`，可以实现支持 SSR 的异步组件。
+
+```tsx
+import React from 'react';
+import { lazy } from 'react-imvc/hoc/lazy';
+
+const LazySidebar = lazy(() => import('./sidebar'));
+
+const View = () => {
+  const handleClick = () => {
+    // 加载完成后，自动刷新 LazySideBar
+    LazySideBar.load();
+  };
+  return (
+    <div>
+      <button onClick={}>load</button>
+      <LazySidebar fallback={<div>占位</div>} />
+    </div>
+  );
+};
+
+class Async extends Controller {
+  View = View;
+  async componentWillCreate() {
+    // SSR 时提前加载 LazySideBar
+    await LazySideBar.load();
+  }
+
+  async viewWillHydrate() {
+    // hydrate 前，提前加载 LazySideBar
+    await LazySideBar.load();
+  }
+}
+```

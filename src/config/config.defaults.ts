@@ -76,6 +76,7 @@ const defaultConfig: EntireConfig = {
   },
   useServerBundle: false,
   useTypeCheck: false,
+  useCoverage: process.env.USE_COVERAGE === '1',
   gulp: {
     // 需要压缩到 static 目录的 css
     css: [],

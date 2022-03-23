@@ -252,7 +252,7 @@ interface OptionsMore {
 export type Options = OptionsMore & Partial<typeof yargs.argv>
 
 export interface GetBabelFunc {
-  (): TransformOptions
+  (config: EntireConfig): TransformOptions
 }
 
 export type Config = Partial<EntireConfig>
@@ -485,6 +485,11 @@ export interface EntireConfig {
    * 使用 fork-ts-checker-webpack-plugin 进行类型检查
    */
   useTypeCheck: boolean
+
+  /**
+   * 是否使用覆盖率
+   */
+  useCoverage: boolean
 
   /**
    * 打包出来的服务端 bundle 的文件名

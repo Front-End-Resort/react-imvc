@@ -218,7 +218,7 @@ export default function createWebpackConfig(
     babelrc: false,
     configFile: false,
     cacheDirectory: true,
-    ...config.babel(),
+    ...config.babel(config),
     // Save disk space when time isn't as important
     cacheCompression: isProd,
     compact: isProd,

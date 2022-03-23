@@ -17,3 +17,5 @@ mock/test.json
 dist
 coverage
 .npmrc
+test-results/
+playwright-report/

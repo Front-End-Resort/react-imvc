@@ -443,6 +443,7 @@ export default class Controller<
 
     if (context.isServer) {
       let { res } = context
+      // @ts-ignore
       res && res.clearCookie(key, options)
     } else if (context.isClient) {
       Cookie.remove(key, options)

@@ -46,7 +46,7 @@ export default class ErrorBoundary extends React.Component<
     try {
       return this.props.children
     } catch (error) {
-      this.catchError(error)
+      this.catchError(error as Error)
       return this.props.fallback
     } finally {
       React.createElement = prevCreateElement

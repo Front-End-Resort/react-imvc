@@ -126,7 +126,7 @@ export default function createGulpTask(
     return gulp
       .src(config.js.src)
       .pipe(plumber())
-      .pipe(babel(options.babel() as any))
+      .pipe(babel(options.babel(options) as any))
       .pipe(uglify())
       .pipe(gulp.dest(config.js.dest))
   }
@@ -159,7 +159,7 @@ export default function createGulpTask(
     return gulp
       .src(config.publishBabel.src)
       .pipe(plumber())
-      .pipe(babel(options.babel() as any))
+      .pipe(babel(options.babel(options) as any))
       .pipe(gulp.dest(config.publishBabel.dest))
   }
 

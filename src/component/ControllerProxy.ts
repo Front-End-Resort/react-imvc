@@ -39,7 +39,7 @@ export default class ControllerProxy<
       }
     } catch (error) {
       if (controller.errorDidCatch) {
-        controller.errorDidCatch(error, 'controller')
+        controller.errorDidCatch(error as Error, 'controller')
       } else {
         throw error
       }

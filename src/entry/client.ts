@@ -100,7 +100,7 @@ function render(
     if (!controller) throw error
 
     if (controller.errorDidCatch) {
-      controller.errorDidCatch(error, 'view')
+      controller.errorDidCatch(error as Error, 'view')
     }
 
     if (controller.getViewFallback) {

@@ -14,12 +14,15 @@
     "pretest": "tsc",
     "test": "jest --runInBand --forceExit --coverage",
     "format": "prettier --write --parser typescript \"{src,test}/**/*.ts?(x)\"",
-    "test:start": "ts-node ./test/project/start.ts",
-    "test:debug": "node -r ts-node/register --inspect-brk ./test/project/start.ts",
+    "test:start": "ts-node ./project/start.ts",
+    "test:debug": "node -r ts-node/register --inspect-brk ./project/start.ts",
     "publish-imvc": "npm publish",
     "prepublish-imvc": "npm run build",
     "publish-beta": "npm publish --tag beta",
-    "rmnm": "rimraf node_modules"
+    "rmnm": "rimraf node_modules",
+    "posttest:coverage": "nyc report --reporter=text",
+    "pretest:coverage": "rimraf coverage playwright-report .nyc_output",
+    "test:coverage": "playwright test"
   },
   "files": [
     "bin",
@@ -115,6 +118,8 @@
     "react-dom": "^17.0.1"
   },
   "devDependencies": {
+    "@bgotink/playwright-coverage": "^0.1.3",
+    "@playwright/test": "^1.20.0",
     "@types/body-parser": "^1.19.0",
     "@types/classnames": "^2.2.10",
     "@types/cookie-parser": "^1.4.2",
@@ -144,7 +149,9 @@
     "@types/webpack-hot-middleware": "^2.25.0",
     "@types/webpack-manifest-plugin": "^2.1.0",
     "@types/webpack-node-externals": "^1.7.1",
+    "babel-plugin-istanbul": "^6.1.1",
     "fetch-mock": "^9.2.1",
+    "nyc": "^15.1.0",
     "prettier": "^2.1.1",
     "puppeteer": "^2.1.1",
     "react": "^17.0.1",
@@ -153,7 +160,9 @@
     "ts-jest": "^26.3.0",
     "ts-node": "^8.7.0",
     "typescript": "^4.1.3",
-    "webpack-cli": "^3.3.11"
+    "v8-to-istanbul": "^8.1.1",
+    "webpack-cli": "^3.3.11",
+    "zx": "^6.0.7"
   },
   "license": "MIT"
 }

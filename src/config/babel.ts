@@ -1,6 +1,7 @@
 import type { TransformOptions, PluginItem } from '@babel/core'
+import type { EntireConfig } from '..'
 
-export default function Babel(): TransformOptions {
+export default function Babel(config: EntireConfig): TransformOptions {
   let presets: PluginItem[] = [
     '@babel/preset-env',
     '@babel/preset-react',
@@ -14,7 +15,7 @@ export default function Babel(): TransformOptions {
       },
     ],
   ]
-  let plugins: PluginItem[] = [
+  let plugins = [
     // Stage 0
     '@babel/plugin-proposal-function-bind',
 
@@ -35,7 +36,9 @@ export default function Babel(): TransformOptions {
 
     // Stage 4
     ['@babel/plugin-proposal-optional-chaining', { loose: false }],
-  ]
+
+    config.useCoverage && ['istanbul'],
+  ].filter(Boolean) as PluginItem[]
 
   return {
     presets,

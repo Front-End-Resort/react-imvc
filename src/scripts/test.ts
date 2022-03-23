@@ -14,6 +14,7 @@ process.on('unhandledRejection', (error) => {
 import fs from 'fs'
 import path from 'path'
 import getConfig from '../config'
+import defaultConfig from '../config/config.defaults'
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -21,7 +22,7 @@ import getConfig from '../config'
 let config = getConfig(yargs.argv)
 
 require('@babel/register')({
-  ...config.babel(),
+  ...config.babel(defaultConfig),
   extensions: ['.es6', '.es', '.jsx', '.js', '.mjs', '.ts', '.tsx'],
 })
 

@@ -72,7 +72,7 @@ function requireConfig(filePath: string): EntireConfig {
     return require(finalFilePath)
   }
   const babelConfig: TransformOptions = {
-    ...configBabel(),
+    ...configBabel(defaultConfig),
     filenameRelative: finalFilePath,
   }
   const result = transformFileSync(finalFilePath, babelConfig)

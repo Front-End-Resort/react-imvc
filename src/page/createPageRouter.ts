@@ -112,7 +112,7 @@ function renderToString(
     if (!controller) throw error
 
     if (controller.errorDidCatch) {
-      controller.errorDidCatch(error, 'view')
+      controller.errorDidCatch(error as Error, 'view')
     }
 
     if (controller.getViewFallback) {
@@ -168,6 +168,7 @@ export default function createPageRouter(options: EntireConfig) {
   let serverAppSettings: AppSettings = {
     loader: commonjsLoader,
     routes: routes,
+    // @ts-ignore
     viewEngine: { render },
     context: {
       isClient: false,

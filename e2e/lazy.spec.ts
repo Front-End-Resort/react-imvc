@@ -1,4 +1,5 @@
-import { expect, test } from './baseFixtures'
+import { expect } from '@playwright/test'
+import { test } from '../src/playwright'
 
 const PORT = 3333
 

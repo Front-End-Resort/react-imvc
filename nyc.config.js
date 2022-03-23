@@ -1,4 +1,5 @@
 module.exports = {
-  'check-coverage': true,
+  'check-coverage': false,
   include: ['project/**'],
+  reporter: ['text']
 }

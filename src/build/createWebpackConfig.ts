@@ -249,7 +249,8 @@ export default function createWebpackConfig(
     maxEntrypointSize: 400000,
     ...config.performance,
   }
-  const resolveConfig = {
+  const resolveConfig: webpack.Resolve = {
+    mainFields: ['browser', 'main'],
     modules: ['node_modules'],
     extensions: ['.js', '.jsx', '.json', '.mjs', '.ts', '.tsx'],
     alias: alias,

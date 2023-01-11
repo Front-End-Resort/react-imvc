@@ -39,9 +39,7 @@ function getModule(module: any) {
 function isIMVCController(fn: any): fn is Controller<any, any> {
   return fn.__SYMBOL === 'REACT_IMVC_CONTROLLER'
 }
-function isThenable<T, S>(
-  input: PromiseLike<T> | S
-): input is PromiseLike<T> {
+function isThenable<T, S>(input: PromiseLike<T> | S): input is PromiseLike<T> {
   // @ts-ignore
   return input && input.then && typeof input.then === 'function'
 }

@@ -45,7 +45,7 @@ export default function start(options: Options): Promise<Result> {
     }
     return fetch(url, options)
   }
-  global.fetch = (fetchNative as unknown) as typeof window.fetch
+  global.fetch = fetchNative as unknown as typeof window.fetch
 
   /**
    * set port from environment and store in Express.

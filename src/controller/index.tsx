@@ -56,7 +56,8 @@ let uid = 0 // seed of controller id
 export default class Controller<
   S extends object,
   AS extends Actions<BaseState & S>
-> implements AppController {
+> implements AppController
+{
   location: Location
   history: HistoryWithBFOL<BLWithBQ, ILWithBQ>
   context: Context
@@ -150,8 +151,8 @@ export default class Controller<
     this.deepCloneInitialState = true
 
     // For TypeScript placeholder
-    this.store = (void 0 as unknown) as Store<S & BaseState, BaseActions & AS>
-    this.history = (createHistory() as unknown) as HistoryWithBFOL<
+    this.store = void 0 as unknown as Store<S & BaseState, BaseActions & AS>
+    this.history = createHistory() as unknown as HistoryWithBFOL<
       BLWithBQ,
       ILWithBQ
     >
@@ -587,7 +588,7 @@ export default class Controller<
         return obj
       }, {} as any)
 
-      this.store.actions = (actions as unknown) as Currings<
+      this.store.actions = actions as unknown as Currings<
         S & BaseState,
         BaseActions & AS
       >

@@ -54,18 +54,17 @@ export default class ErrorBoundary extends React.Component<
   }
 }
 
-export const withFallback = (fallback: object) => (
-  InputComponent: React.ComponentType
-) => {
-  function Component(props: object) {
-    return createElement(ErrorBoundary, { fallback }, () =>
-      createElement(InputComponent, props)
-    )
+export const withFallback =
+  (fallback: object) => (InputComponent: React.ComponentType) => {
+    function Component(props: object) {
+      return createElement(ErrorBoundary, { fallback }, () =>
+        createElement(InputComponent, props)
+      )
+    }
+
+    const displayName = InputComponent.name || InputComponent.displayName
+
+    Component.name = `ErrorBoundary(${displayName})`
+
+    return Component
   }
-
-  const displayName = InputComponent.name || InputComponent.displayName
-
-  Component.name = `ErrorBoundary(${displayName})`
-
-  return Component
-}

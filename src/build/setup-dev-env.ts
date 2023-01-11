@@ -10,9 +10,7 @@ import { getExternals, matchExternals } from './util'
 import type { NextHandleFunction } from 'connect'
 import type { EntireConfig } from '..'
 
-export function setupClient(
-  config: EntireConfig
-): {
+export function setupClient(config: EntireConfig): {
   compiler: webpack.Compiler
   middleware: webpackDevMiddleware.WebpackDevMiddleware & NextHandleFunction
 } {

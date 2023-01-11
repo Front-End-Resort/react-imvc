@@ -163,8 +163,10 @@ export default function createPageRouter(options: EntireConfig) {
   routes = getFlatList(routes)
 
   let router = Router()
-  let render: ViewEngineRender<React.ReactElement, Controller<any, any>> =
-    renderers[config.renderMode] || renderToNodeStream
+  let render: ViewEngineRender<
+    React.ReactElement,
+    Controller<any, any>
+  > = renderers[config.renderMode] || renderToNodeStream
   let serverAppSettings: AppSettings = {
     loader: commonjsLoader,
     routes: routes,

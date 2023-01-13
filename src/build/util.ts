@@ -1,44 +1,27 @@
 import path from 'path'
+import fs from 'fs'
 import type { EntireConfig } from '..'
+import 'webpack-node-externals'
+// @ts-ignore
+import { readFromPackageJson } from 'webpack-node-externals/utils'
+
+export function getPackageRelativePath(config: EntireConfig): string {
+  const cwd = process.cwd()
+  if (typeof config.root !== 'string' || config.root === cwd) {
+    return 'package.json'
+  }
+  const rootPackagePath = path.join(config.root, './package.json')
+  const rootParentPackagePath = path.join(config.root, '../package.json')
+  if (fs.existsSync(rootPackagePath)) {
+    return path.relative(cwd, rootPackagePath)
+  } else if (fs.existsSync(rootParentPackagePath)) {
+    return path.relative(cwd, rootParentPackagePath)
+  }
+  return 'package.json'
+}
 
 export function getExternals(config: EntireConfig): string[] {
-  let dependencies: string[] = []
-
-  let list: string[] = [
-    path.resolve('package.json'),
-    path.join(__dirname, '../../package.json'),
-    path.join(config.root, '../package.json'),
-  ]
-
-  while (true) {
-    let item = list.shift()
-    if (item === void 0) {
-      break
-    }
-
-    try {
-      let pkg = require(item)
-      if (pkg.dependencies) {
-        dependencies = dependencies.concat(Object.keys(pkg.dependencies))
-      }
-      if (pkg.devDependencies) {
-        dependencies = dependencies.concat(Object.keys(pkg.devDependencies))
-      }
-    } catch (error) {
-      // ignore error
-    }
-  }
-
-  let map: Record<string, boolean> = {}
-  dependencies = dependencies.filter((name) => {
-    if (map[name]) {
-      return false
-    }
-    map[name] = true
-    return true
-  })
-
-  return dependencies
+  return readFromPackageJson({ fileName: getPackageRelativePath(config) })
 }
 
 export function matchExternals(

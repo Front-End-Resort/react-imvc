@@ -6,7 +6,7 @@ import notifier from 'node-notifier'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import nodeExternals from 'webpack-node-externals'
 import createWebpackConfig from './createWebpackConfig'
-import { getExternals, matchExternals } from './util'
+import { getExternals, matchExternals, getPackageRelativePath } from './util'
 import type { NextHandleFunction } from 'connect'
 import type { EntireConfig } from '..'
 
@@ -53,7 +53,8 @@ export function setupServer(
   // in order to ignore built-in modules like path, fs, etc.
   serverConfig.target = 'node'
   // in order to ignore all modules in node_modules folder
-  serverConfig.externals = [nodeExternals()]
+  // @ts-ignore
+  serverConfig.externals = [nodeExternals({ modulesFromFile: { fileName: getPackageRelativePath(config) } })];
 
   if (!serverConfig.output) {
     serverConfig.output = {

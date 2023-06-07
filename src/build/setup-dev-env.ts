@@ -84,7 +84,10 @@ export function setupServer(
     let defaultModuleResult = Symbol('default-module-result')
     let virtualRequire = (modulePath: string) => {
       if (matchExternals(externals, modulePath)) {
-        return require(modulePath)
+        const resolvedPath = require.resolve(modulePath, {
+          paths: [config.root]
+        })
+        return require(resolvedPath)
       }
       let filePath = modulePath
       if (

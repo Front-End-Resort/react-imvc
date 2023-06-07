@@ -10,7 +10,7 @@ process.env.NODE_ENV = 'test'
 
 let PORT: number = 33331
 
-const ROOT: string = path.join(__dirname, 'project')
+const ROOT: string = path.join(__dirname, '../project')
 
 const config: Config = {
   root: ROOT, // 项目根目录

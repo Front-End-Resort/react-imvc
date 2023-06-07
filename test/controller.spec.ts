@@ -18,7 +18,7 @@ interface Server extends http.Server {
 
 process.env.NODE_ENV = 'test'
 let PORT = 33332
-const ROOT = path.join(__dirname, 'project')
+const ROOT = path.join(__dirname, '../project')
 const config: Config = {
   root: ROOT, // 项目根目录
   port: PORT, // server 端口号

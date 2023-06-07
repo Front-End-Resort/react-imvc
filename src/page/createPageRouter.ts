@@ -147,7 +147,7 @@ function getRightPath(filePath: string): string {
   return finalFilePath
 }
 
-export default function createPageRouter(options: EntireConfig) {
+export default function createPageRouter(options: EntireConfig): Router {
   let config = Object.assign({}, options)
   let routes: Route[] = []
 

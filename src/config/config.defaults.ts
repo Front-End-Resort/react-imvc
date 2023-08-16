@@ -74,7 +74,6 @@ const defaultConfig: EntireConfig = {
       extended: false,
     },
   },
-  useServerBundle: false,
   useTypeCheck: false,
   useCoverage: process.env.USE_COVERAGE === '1',
   gulp: {

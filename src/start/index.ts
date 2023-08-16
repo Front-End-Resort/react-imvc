@@ -23,9 +23,13 @@ declare global {
   }
 }
 
-export default function start(options: Options): Promise<Result> {
+export default async function start(options: Options): Promise<Result> {
   let config = getConfig(options)
-  let app = createExpressApp(config)
+  let [app, pageRouter] = await Promise.all([
+    createExpressApp(config),
+    createPageRouter(config)
+  ])
+
   let port = normalizePort(config.port)
 
   /**
@@ -57,8 +61,6 @@ export default function start(options: Options): Promise<Result> {
    */
 
   let server = http.createServer(app)
-
-  let pageRouter = createPageRouter(config)
 
   let routePath = path.join(config.root, config.routes)
 

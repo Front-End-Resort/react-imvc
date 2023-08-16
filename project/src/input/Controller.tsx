@@ -40,7 +40,7 @@ export default class extends Controller<typeof initialState, {}> {
   }
 }
 
-function isValidPhone(value) {
+function isValidPhone(value: string) {
   return /^[0-9]+$/gi.test(value)
 }
 

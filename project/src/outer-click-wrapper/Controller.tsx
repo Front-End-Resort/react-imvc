@@ -4,7 +4,7 @@ import Controller from '../../../src/controller'
 import { OuterClickWrapper } from '../../../src/component'
 
 export interface State {
-  count?: number
+  count: number
 }
 
 export interface Ctrl {
@@ -42,6 +42,7 @@ function View({ state, ctrl }: ViewProps) {
         <div>
           <p id="beside">beside region</p>
         </div>
+        {/* @ts-ignore */}
         <OuterClickWrapper onClick={ctrl.handleClick}>
           <p id="inner">inner region</p>
         </OuterClickWrapper>

@@ -12,9 +12,9 @@ import shareRoot from '../middleware/shareRoot'
 import * as setupDevEnv from '../build/setup-dev-env'
 import type { EntireConfig, Req } from '..'
 
-export default function createExpressApp(
+export default async function createExpressApp(
   config: EntireConfig
-): express.Express {
+): Promise<express.Express> {
   const app: express.Express = express()
 
   // handle basename
@@ -92,7 +92,7 @@ export default function createExpressApp(
 
   if (config.webpackDevMiddleware) {
     // 开发模式用 webpack-dev-middleware 代理 js 文件
-    let { compiler, middleware } = setupDevEnv.setupClient(config)
+    let { compiler, middleware } = await setupDevEnv.setupClient(config)
     app.use(middleware)
 
     // 添加热更新中间件

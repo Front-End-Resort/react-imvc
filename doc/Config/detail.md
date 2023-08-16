@@ -233,6 +233,27 @@ restapi basename，如果配置了这个属性，controller.fetch 方法将为�
 
 ## 打包构建配置
 
+* compileNodeModules
+
+编译 node_modules 模块选项，可选，对象类型，
+
+- `rules`: 数组类型，支持 `string | RegExp | ((filename: string) => boolean)`
+
+命中该配置的模块将被 babel 编译，因此可以通过该配置支持 esm 模块。
+
+请注意，使用正则时需兼容处理 Windows 和 Mac/Linux 的路径差异（`(\/|\\)` 同时支持了两者）。
+
+```js
+{
+  compileNodeModules: {
+        rules: [
+            // 将 @antv/g2 加入编译
+            /@antv(\/|\\)g2/
+        ]
+    },
+}
+```
+
 * bundleAnalyzer
 
 类型：`BundleAnalyzerPlugin.Options | false`

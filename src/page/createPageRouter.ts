@@ -147,14 +147,12 @@ function getRightPath(filePath: string): string {
   return finalFilePath
 }
 
-export default function createPageRouter(options: EntireConfig): Router {
+export default async function createPageRouter(options: EntireConfig): Promise<Router> {
   let config = Object.assign({}, options)
   let routes: Route[] = []
 
-  if (config.useServerBundle) {
+  if (!config.webpackDevMiddleware) {
     routes = require(path.join(config.root, config.serverBundleName))
-  } else {
-    routes = require(path.join(config.root, config.src))
   }
 
   if (!Array.isArray(routes)) {
@@ -189,20 +187,24 @@ export default function createPageRouter(options: EntireConfig): Router {
     router.all('*', (req, res) => {
       res.render(layoutView)
     })
-  } else if (process.env.NODE_ENV === 'development') {
+  } else if (config.webpackDevMiddleware) {
     // 带服务端渲染模式的开发环境，需要动态编译 src/routes
-    let setupDevEnv = require('../build/setup-dev-env')
-    setupDevEnv.setupServer(config, {
-      handleHotModule: ($routes: any[] | object) => {
-        const routes = getFlatList(
-          Array.isArray($routes) ? $routes : Object.values($routes)
-        )
-        app = createApp({
-          ...serverAppSettings,
-          routes,
-        })
-      },
+    let setupDevEnv = await import('../build/setup-dev-env')
+    let handleRoutes = ($routes: any[] | object) => {
+      const routes = getFlatList(
+        Array.isArray($routes) ? $routes : Object.values($routes)
+      )
+      app = createApp({
+        ...serverAppSettings,
+        routes,
+      })
+    }
+
+    let $routes = await setupDevEnv.setupServer(config, {
+      handleHotModule: handleRoutes,
     })
+
+    handleRoutes($routes as any)
   }
 
   // handle page

@@ -16,15 +16,13 @@ export default function build(options: Options): Promise<EntireConfig | void> {
   const config = getConfig(options, true)
   const delPublicPgs = () => delPublish(path.join(config.root, config.publish))
   const startGulpPgs = () => startGulp(config)
-  const startWebpackPgs = () =>
-    config.useServerBundle
-      ? new Promise((resolve) => {
-          Promise.all([
-            startWebpackForClient(config),
-            startWebpackForServer(config),
-          ]).then(resolve)
-        })
-      : startWebpackForClient(config)
+  const startWebpackPgs = () => new Promise((resolve) => {
+    Promise.all([
+      startWebpackForClient(config),
+      startWebpackForServer(config),
+    ]).then(resolve)
+  })
+
   const startStaticEntryPgs = () => startStaticEntry(config)
   const errorHandler = (error: Error) => {
     console.error(error)

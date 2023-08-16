@@ -5,10 +5,11 @@ import TerserPlugin from 'terser-webpack-plugin'
 // @ts-ignore
 import PnpWebpackPlugin from 'pnp-webpack-plugin'
 import ManifestPlugin from 'webpack-manifest-plugin'
+import nodeExternals from 'webpack-node-externals'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import { getExternals } from './util'
 import type { EntireConfig } from '..'
+import { checkFilename } from './compileNodeModules'
 
 export default function createWebpackConfig(
   options: EntireConfig,
@@ -46,11 +47,13 @@ export default function createWebpackConfig(
   }
 
   if (isServer) {
+    result.target = 'node'
     defaultOutput = {
       ...defaultOutput,
       libraryTarget: 'commonjs2',
       path: path.join(config.root, config.publish),
       filename: config.serverBundleName,
+      chunkFilename: `js/[name].js`,
     }
   } else {
     defaultOutput = {
@@ -90,24 +93,24 @@ export default function createWebpackConfig(
 
     // TypeScript type checking
     config.useTypeCheck &&
-      new ForkTsCheckerWebpackPlugin({
-        typescript: resolve.sync('typescript', {
-          basedir: path.join(config.root, 'node_modules'),
-        }),
-        async: !isProd,
-        useTypescriptIncrementalApi: true,
-        checkSyntacticErrors: true,
-        tsconfig: path.join(config.root, 'tsconfig.json'),
-        reportFiles: [
-          '**',
-          '!**/*.json',
-          '!**/__tests__/**',
-          '!**/?(*.)(spec|test).*',
-          '!**/src/setupProxy.*',
-          '!**/src/setupTests.*',
-        ],
-        watch: config.root,
+    new ForkTsCheckerWebpackPlugin({
+      typescript: resolve.sync('typescript', {
+        basedir: path.join(config.root, 'node_modules'),
       }),
+      async: !isProd,
+      useTypescriptIncrementalApi: true,
+      checkSyntacticErrors: true,
+      tsconfig: path.join(config.root, 'tsconfig.json'),
+      reportFiles: [
+        '**',
+        '!**/*.json',
+        '!**/__tests__/**',
+        '!**/?(*.)(spec|test).*',
+        '!**/src/setupProxy.*',
+        '!**/src/setupTests.*',
+      ],
+      watch: config.root,
+    }),
   ].filter(Boolean)
 
   // 添加热更新插件
@@ -143,7 +146,7 @@ export default function createWebpackConfig(
     )
     watch = false
     if (!isServer) {
-      optimization = Object.assign(optimization, {
+      Object.assign(optimization, {
         minimizer: [
           new TerserPlugin({
             terserOptions: {
@@ -191,9 +194,9 @@ export default function createWebpackConfig(
         ],
       })
     } else {
-      optimization = {
+      Object.assign(optimization, {
         minimize: false,
-      }
+      })
     }
   }
 
@@ -235,6 +238,24 @@ export default function createWebpackConfig(
       options: babelOptions,
     },
   ]
+
+  // 将指定的node_modules目录下的文件也进行babel编译
+  if (config.compileNodeModules?.rules) {
+    moduleRulesConfig = moduleRulesConfig.concat(
+      {
+        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        include: filename => {
+          if (!filename.includes('node_modules')) {
+            return false
+          }
+          return checkFilename(filename, config.compileNodeModules?.rules)
+        },
+        loader: 'babel-loader',
+        options: babelOptions,
+      }
+    )
+  }
+
   moduleRulesConfig = moduleRulesConfig.concat(
     config.webpackLoaders,
     postLoaders
@@ -250,7 +271,6 @@ export default function createWebpackConfig(
     ...config.performance,
   }
   const resolveConfig: webpack.Resolve = {
-    mainFields: ['browser', 'main'],
     modules: ['node_modules'],
     extensions: ['.js', '.jsx', '.json', '.mjs', '.ts', '.tsx'],
     alias: alias,
@@ -283,7 +303,10 @@ export default function createWebpackConfig(
     resolve: resolveConfig,
     context: root,
     resolveLoader: resolveLoaderConfig,
-    externals: isServer ? getExternals(config) : void 0,
+    externals: isServer ? nodeExternals({
+      allowlist: (config.compileNodeModules?.rules ?? []),
+      modulesFromFile: true,
+    }) : void 0,
   })
 
   if (!!config.webpack) {

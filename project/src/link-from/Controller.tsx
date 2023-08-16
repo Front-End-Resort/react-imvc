@@ -44,7 +44,7 @@ function View() {
         activeStyle={{
           fontSize: 14,
         }}
-        isActive={(path, location) => true}
+        isActive={() => true}
       >
         link to
       </NavLink>

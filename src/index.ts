@@ -32,6 +32,7 @@ import type {
 } from 'create-app/client'
 import type Controller from './controller'
 import type { BaseActions as BA } from './controller'
+import type { CompileNodeModulesOptions } from './build/compileNodeModules'
 
 export type { Action, Curring, Currings, AnyAction, Actions } from 'relite'
 
@@ -475,11 +476,6 @@ export interface EntireConfig {
    * 热更新开关 默认关闭
    */
   hot: boolean
-  /**
-   * 是否使用 server.bundle.js 代替 src/index 作为服务端访问的代码入口
-   * 默认 false 兼容以前的默认行为
-   */
-  useServerBundle: boolean
 
   /**
    * 使用 fork-ts-checker-webpack-plugin 进行类型检查
@@ -490,6 +486,11 @@ export interface EntireConfig {
    * 是否使用覆盖率
    */
   useCoverage: boolean
+
+  /**
+   * 编译 node_modules 模块选项
+   */
+  compileNodeModules?: CompileNodeModulesOptions
 
   /**
    * 打包出来的服务端 bundle 的文件名

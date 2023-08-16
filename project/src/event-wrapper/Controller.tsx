@@ -23,7 +23,7 @@ export default class extends Controller<typeof initialState, {}> {
   }
 }
 
-function View({ state }) {
+function View({ state }: any) {
   return (
     <div id="event">
       <EventWrapper onClick="handleClick">

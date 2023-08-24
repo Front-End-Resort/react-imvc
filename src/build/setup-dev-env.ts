@@ -69,7 +69,7 @@ export async function setupServer(
   )
   serverCompiler.outputFileSystem = mfs
 
-  return new Promise<unknown>(resolve => {
+  return new Promise<unknown>((resolve, reject) => {
     let isResolved = false
     serverCompiler.watch({}, (err, stats) => {
       if (err) throw err
@@ -97,27 +97,27 @@ export async function setupServer(
                     var factory = function(require, module, exports) {
                         ${sourceCode}
                     }
-                    try {
-                        factory(require, module, module.exports)
-                    } catch(error) {
-                        return null
-                    }
+
+                    factory(require, module, module.exports)
+
                     return module.exports
           })
         `)(virtualRequire)
       }
 
-      // 构造一个 commonjs 的模块加载函数，拿到 newModule
-      let newModule = runCode(sourceCode)
+      try {
+        // 构造一个 commonjs 的模块加载函数，拿到 newModule
+        let newModule = runCode(sourceCode)
 
-      if (newModule) {
-        if (isResolved) {
-          options.handleHotModule(newModule.default || newModule)
-        } else {
+        if (!isResolved) {
           isResolved = true
           console.log(`server webpack compile success in ${Date.now() - startTime}ms`)
-          resolve(newModule.default || newModule)
+          resolve(newModule?.default || newModule)
+        } else {
+          options.handleHotModule(newModule?.default || newModule)
         }
+      } catch (error) {
+        reject(error)
       }
     })
   })

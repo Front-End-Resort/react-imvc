@@ -135,17 +135,17 @@ export default function createWebpackConfig(
   }
 
   if (isProd) {
-    output = Object.assign(
-      defaultOutput,
-      !isServer && {
-        filename: 'js/[name]-[contenthash:6].js',
-        chunkFilename: 'js/[name]-[contenthash:6].js',
-        devtoolModuleFilenameTemplate,
-      },
-      config.productionOutput
-    )
     watch = false
     if (!isServer) {
+      output = Object.assign(
+        defaultOutput,
+        !isServer && {
+          filename: 'js/[name]-[contenthash:6].js',
+          chunkFilename: 'js/[name]-[contenthash:6].js',
+          devtoolModuleFilenameTemplate,
+        },
+        config.productionOutput
+      )
       Object.assign(optimization, {
         minimizer: [
           new TerserPlugin({
@@ -194,9 +194,9 @@ export default function createWebpackConfig(
         ],
       })
     } else {
-      Object.assign(optimization, {
+      optimization = {
         minimize: false,
-      })
+      }
     }
   }
 

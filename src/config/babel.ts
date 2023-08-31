@@ -2,6 +2,7 @@ import type { TransformOptions, PluginItem } from '@babel/core'
 
 export type BabelOptions = {
   useCoverage?: boolean
+  useBabelRuntime?: boolean
 }
 
 export default function Babel(config: BabelOptions = {}): TransformOptions {
@@ -19,7 +20,7 @@ export default function Babel(config: BabelOptions = {}): TransformOptions {
     ],
   ]
   let plugins = [
-    ['@babel/plugin-transform-runtime', { regenerator: false }],
+    config.useBabelRuntime && ['@babel/plugin-transform-runtime', { regenerator: false }],
     '@babel/plugin-proposal-function-bind',
     '@babel/plugin-proposal-export-default-from',
     ['@babel/plugin-proposal-pipeline-operator', { proposal: 'minimal' }],

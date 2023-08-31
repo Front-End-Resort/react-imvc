@@ -488,6 +488,11 @@ export interface EntireConfig {
   useCoverage: boolean
 
   /**
+   * 是否使用 babel-runtime
+   */
+  useBabelRuntime: boolean
+
+  /**
    * 编译 node_modules 模块选项
    */
   compileNodeModules?: CompileNodeModulesOptions

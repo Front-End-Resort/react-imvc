@@ -41,22 +41,21 @@ function createConfig(options: EntireConfig): GulpTaskConfig {
     publishCopy: {
       src: [
         root +
-          (/^[a-zA-Z]+$/.test(options.publish)
-            ? `/!(node_modules|${options.publish}|buildportal-script)/**/*`
-            : `/!(node_modules|buildportal-script)/**/*`),
+        (/^[a-zA-Z]+$/.test(options.publish)
+          ? `/!(node_modules|${options.publish}|buildportal-script)/**/*`
+          : `/!(node_modules|buildportal-script)/**/*`),
         root +
-          (/^[a-zA-Z]+$/.test(options.publish)
-            ? `/!(node_modules|${options.publish}|buildportal-script)`
-            : `/!(node_modules|buildportal-script)`),
+        (/^[a-zA-Z]+$/.test(options.publish)
+          ? `/!(node_modules|${options.publish}|buildportal-script)`
+          : `/!(node_modules|buildportal-script)`),
       ],
       dest: publish,
     },
     publishBabel: {
       src: [
         root +
-          `/!(node_modules|${
-            /^[a-zA-Z]+$/.test(options.publish) ? options.publish + '|' : ''
-          }buildportal-script)/**/*.@(js|ts|jsx|tsx)`,
+        `/!(node_modules|${/^[a-zA-Z]+$/.test(options.publish) ? options.publish + '|' : ''
+        }buildportal-script)/**/*.@(js|ts|jsx|tsx)`,
         publish + '/*.@(js|ts|jsx|tsx)',
         root + '/*.@(js|ts|jsx|tsx)',
       ],
@@ -82,6 +81,22 @@ export default function createGulpTask(
   options: EntireConfig
 ): gulp.TaskFunction {
   let config: GulpTaskConfig = Object.assign(createConfig(options))
+
+  let babelConfig = options.babel(options)
+
+  /**
+   * Remove @babel/plugin-transform-runtime
+   * 因为 gulp 编译的文件可能不会被 bundle，无法使用 require('@babel/runtime')，所以需要把 runtime 代码内联
+   */
+  babelConfig.plugins = (babelConfig.plugins || []).filter(plugin => {
+    if (Array.isArray(plugin)) {
+      return plugin[0].includes('runtime') ? false : true
+    } else if (typeof plugin === 'string') {
+      return plugin.includes('runtime') ? false : true
+    }
+    return true
+  })
+
 
   let minifyCSS = () => {
     if (!config.css) {
@@ -126,7 +141,7 @@ export default function createGulpTask(
     return gulp
       .src(config.js.src)
       .pipe(plumber())
-      .pipe(babel(options.babel(options) as any))
+      .pipe(babel(babelConfig as any))
       .pipe(uglify())
       .pipe(gulp.dest(config.js.dest))
   }
@@ -159,7 +174,7 @@ export default function createGulpTask(
     return gulp
       .src(config.publishBabel.src)
       .pipe(plumber())
-      .pipe(babel(options.babel(options) as any))
+      .pipe(babel(babelConfig as any))
       .pipe(gulp.dest(config.publishBabel.dest))
   }
 

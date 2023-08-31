@@ -413,6 +413,14 @@ express 中间件 bodyParse 的自定义配置。
 
 使用 fork-ts-checker-webpack-plugin 进行类型检查。
 
+* useBabelRuntime
+
+类型：`boolean`
+
+默认值：`true`
+
+使用 babel-runtime 减少编译产物体积。
+
 * gulp
 
 类型：

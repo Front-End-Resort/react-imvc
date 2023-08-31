@@ -8,6 +8,7 @@ import htmlmin from 'gulp-htmlmin'
 import plumber from 'gulp-plumber'
 import cleanCSS from 'gulp-clean-css'
 import type { EntireConfig, GulpTaskConfig } from '..'
+import { TransformOptions } from '@babel/core'
 
 function createConfig(options: EntireConfig): GulpTaskConfig {
   let root = options.root
@@ -77,13 +78,7 @@ function createConfig(options: EntireConfig): GulpTaskConfig {
   return config
 }
 
-export default function createGulpTask(
-  options: EntireConfig
-): gulp.TaskFunction {
-  let config: GulpTaskConfig = Object.assign(createConfig(options))
-
-  let babelConfig = options.babel(options)
-
+const removeBabelRuntimePlugin = (babelConfig: TransformOptions): TransformOptions => {
   /**
    * Remove @babel/plugin-transform-runtime
    * 因为 gulp 编译的文件可能不会被 bundle，无法使用 require('@babel/runtime')，所以需要把 runtime 代码内联
@@ -96,6 +91,14 @@ export default function createGulpTask(
     }
     return true
   })
+
+  return babelConfig
+}
+
+export default function createGulpTask(
+  options: EntireConfig
+): gulp.TaskFunction {
+  let config: GulpTaskConfig = Object.assign(createConfig(options))
 
 
   let minifyCSS = () => {
@@ -141,7 +144,7 @@ export default function createGulpTask(
     return gulp
       .src(config.js.src)
       .pipe(plumber())
-      .pipe(babel(babelConfig as any))
+      .pipe(babel(removeBabelRuntimePlugin(options.babel(options)) as any))
       .pipe(uglify())
       .pipe(gulp.dest(config.js.dest))
   }
@@ -174,7 +177,7 @@ export default function createGulpTask(
     return gulp
       .src(config.publishBabel.src)
       .pipe(plumber())
-      .pipe(babel(babelConfig as any))
+      .pipe(babel(options.babel(options) as any))
       .pipe(gulp.dest(config.publishBabel.dest))
   }
 

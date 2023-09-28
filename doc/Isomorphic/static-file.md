@@ -37,6 +37,11 @@ function View() {
 }
 ```
 
+### controller.disablePublicPathForPreload -> boolean
+
+是否在 preload 里禁用 publicPath，默认为 false，只对 CRS 生效。如果为 true，会直接使用 node.js 服务端的静态资源路径
+
+
 ## prefetch
 
 除了上述的 `preload` 字段，我们还提供了一个 Controller 的内置函数，用以预加载其他页面的 JavaScript bundle 文件。

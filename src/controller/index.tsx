@@ -56,8 +56,7 @@ let uid = 0 // seed of controller id
 export default class Controller<
   S extends object,
   AS extends Actions<BaseState & S>
-> implements AppController
-{
+> implements AppController {
   location: Location
   history: HistoryWithBFOL<BLWithBQ, ILWithBQ>
   context: Context
@@ -113,8 +112,8 @@ export default class Controller<
   stateDidChange?(data?: Data<S & BaseState, AS & BaseActions>): void
 
   // will excute in *creatye-app/client*
-  saveToCache(): void {}
-  removeFromCache(): void {}
+  saveToCache(): void { }
+  removeFromCache(): void { }
   getAllCache?(): CacheStorage<this>
 
   refreshView?(view?: any): void
@@ -269,6 +268,41 @@ export default class Controller<
     return this.fetch(url, options)
   }
   /**
+   * 基于 webpack 构建的 assets.json 获取客户端的静态资源路径
+   */
+  getClientAssetPath(assetPath: string): string {
+    if (this.context.isServer) {
+      return assetPath
+    }
+
+    let [pathname, search] = assetPath.split('?')
+
+    let assets: Record<string, string> = this.context.assets ?? {}
+    let realAssetPath = assets[pathname]
+
+    if (realAssetPath) {
+      if (!realAssetPath.startsWith('/')) {
+        realAssetPath = '/' + realAssetPath
+      }
+
+      if (search) {
+        // 保留原有的 querystring
+        return `${realAssetPath}?${search}`
+      }
+      
+      return realAssetPath
+    }
+
+    /**
+     * 如果未匹配到，尝试去掉前缀再试一次
+     */
+    if (assetPath.startsWith('/')) {
+      return this.getClientAssetPath(assetPath.slice(1))
+    }
+
+    return assetPath
+  }
+  /**
    * 预加载 css 样式等资源
    */
   fetchPreload(preload?: Preload) {
@@ -284,7 +318,10 @@ export default class Controller<
       if ((context.preload as Preload)[name]) {
         return
       }
-      let url = (preload as Preload)[name]
+      /**
+       * 获取资源的真实路径（可能经过 bundler 处理为 hash 值）
+       */
+      let url = this.getClientAssetPath((preload as Preload)[name])
 
       if (!_.isAbsoluteUrl(url)) {
         if (context.isServer) {
@@ -305,7 +342,7 @@ export default class Controller<
              */
             content = content.replace(/\r+/g, '')
           }
-          ;(context.preload as Preload)[name] = content
+          ; (context.preload as Preload)[name] = content
         })
         .catch((err) => {
           console.log(`preload resource failed: ${name}`, err)

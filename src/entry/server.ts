@@ -10,6 +10,8 @@ import cookieParser from 'cookie-parser'
 import configBabel from '../config/babel'
 import shareRoot from '../middleware/shareRoot'
 import * as setupDevEnv from '../build/setup-dev-env'
+import { getAssets, getStaticAssets, readAssets } from '../build/assets-helper'
+
 import type { EntireConfig, Req } from '..'
 
 export default async function createExpressApp(
@@ -113,10 +115,18 @@ export default async function createExpressApp(
       express.static(path.join(config.root, config.src))
     )
 
+    const staticAssets = await getStaticAssets(path.join(config.root, config.src))
+
     // 开发模式用 webpack-dev-middleware 获取 assets
-    app.use((req, res, next) => {
+    app.use(async (req, res, next) => {
+      const assetsPath = path.join(config.root, config.publish, config.static, config.assetsPath)
+      const assetsJson = JSON.parse(res.locals.fs.readFileSync(assetsPath, 'utf-8'))
+
       res.locals.assets = getAssets(
-        res.locals.webpackStats.toJson().assetsByChunkName
+        {
+          ...staticAssets,
+          ...assetsJson
+        }
       )
       next()
     })
@@ -172,6 +182,7 @@ export default async function createExpressApp(
       restapi: config.restapi,
       ...config.context,
       preload: {},
+      assets: res.locals.assets,
     }
 
     res.locals.appSettings = {
@@ -185,40 +196,4 @@ export default async function createExpressApp(
   })
 
   return app
-}
-
-function getAssets(stats: Record<string, any>): Record<string, any> {
-  return Object.keys(stats).reduce((result, assetName) => {
-    let value = stats[assetName]
-    result[assetName] = Array.isArray(value) ? value[0] : value
-    return result
-  }, {} as Record<string, any>)
-}
-
-function readAssets(config: EntireConfig): Record<string, any> {
-  let result
-  // 生产模式直接用编译好的资源表
-  let assetsPathList = [
-    // 在 publish 目录下启动
-    path.join(config.root, config.static, config.assetsPath),
-    // 在项目根目录下启动
-    path.join(config.root, config.publish, config.static, config.assetsPath),
-  ]
-
-  while (assetsPathList.length) {
-    try {
-      let itemPath = assetsPathList.shift()
-      if (itemPath) {
-        result = require(itemPath)
-      }
-    } catch (error) {
-      // ignore error
-    }
-  }
-
-  if (!result) {
-    throw new Error('找不到 webpack 资源表 assets.json')
-  }
-
-  return getAssets(result)
 }

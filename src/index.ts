@@ -79,6 +79,7 @@ export interface Context extends BaseContext {
   restapi?: string
   req?: express.Request
   res?: express.Response
+  assets: Record<string, string>
   [x: string]: any
 }
 

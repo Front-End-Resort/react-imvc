@@ -8,10 +8,10 @@ import createWebpackConfig from './createWebpackConfig'
 import type { NextHandleFunction } from 'connect'
 import type { EntireConfig } from '..'
 
-export function setupClient(config: EntireConfig) {
+export async function setupClient(config: EntireConfig) {
   let startTime = Date.now()
   console.log('client webpack is starting...')
-  let clientConfig = createWebpackConfig(config)
+  let clientConfig = await createWebpackConfig(config)
   let compiler = webpack(clientConfig)
   return new Promise<{
     compiler: webpack.Compiler
@@ -54,7 +54,7 @@ export async function setupServer(
   let startTime = Date.now()
   console.log('server webpack is starting...')
 
-  let serverConfig = createWebpackConfig(config, true)
+  let serverConfig = await createWebpackConfig(config, true)
 
   if (!serverConfig.output?.path || !serverConfig.output.filename) {
     throw new Error('serverConfig.output.path and serverConfig.output.filename must be specified')

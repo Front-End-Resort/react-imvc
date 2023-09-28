@@ -9,6 +9,7 @@ const config: Config = {
   port: PORT, // server 端口号
   routes: 'routes', // 服务端路由目录
   layout: 'Layout.tsx', // 自定义 Layout
+  publish: '../publish'
   // bundleAnalyzer: true,
   // staticEntry: 'index.html',
 }

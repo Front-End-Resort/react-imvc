@@ -47,8 +47,8 @@ function delPublish(folder: string): Promise<string[]> {
   return del(folder)
 }
 
-function startWebpackForClient(config: EntireConfig): Promise<void> {
-  let webpackConfig = createWebpackConfig(config, false)
+async function startWebpackForClient(config: EntireConfig): Promise<void> {
+  let webpackConfig = await createWebpackConfig(config, false)
   return new Promise((resolve, reject) => {
     webpack(webpackConfig, (error, stats) => {
       if (error) {
@@ -66,8 +66,8 @@ function startWebpackForClient(config: EntireConfig): Promise<void> {
   })
 }
 
-function startWebpackForServer(config: EntireConfig): Promise<void> {
-  let webpackConfig = createWebpackConfig(config, true)
+async function startWebpackForServer(config: EntireConfig): Promise<void> {
+  let webpackConfig = await createWebpackConfig(config, true)
   return new Promise((resolve, reject) => {
     webpack(webpackConfig, (error, stats) => {
       if (error) {
@@ -109,7 +109,7 @@ async function startStaticEntry(config: EntireConfig): Promise<void> {
     ...config.appSettings,
     type: 'createHashHistory',
   }
-  let staticEntryconfig: EntireConfig = {
+  let staticEntryConfig: EntireConfig = {
     ...config,
     root: path.join(config.root, config.publish),
     // 默认当前文件夹
@@ -119,7 +119,7 @@ async function startStaticEntry(config: EntireConfig): Promise<void> {
   }
 
   let { server } = await start({
-    config: staticEntryconfig,
+    config: staticEntryConfig,
   })
 
   let url = `http://localhost:${config.port}/__CREATE_STATIC_ENTRY__`

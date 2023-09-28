@@ -224,6 +224,7 @@ export default async function createPageRouter(options: EntireConfig): Promise<R
       isClient: false,
       req,
       res,
+      assets: res.locals.assets
     }
 
     try {

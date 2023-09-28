@@ -10,11 +10,12 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import type { EntireConfig } from '..'
 import { checkFilename } from './compileNodeModules'
+import { getStaticAssets } from './assets-helper'
 
-export default function createWebpackConfig(
+export default async function createWebpackConfig(
   options: EntireConfig,
   isServer: boolean = false
-): webpack.Configuration {
+): Promise<webpack.Configuration> {
   let result: webpack.Configuration = {}
 
   const config: EntireConfig = Object.assign({}, options)
@@ -66,18 +67,30 @@ export default function createWebpackConfig(
 
   let output = Object.assign(defaultOutput, config.output)
 
-  function ManifestPluginMap(
-    file: ManifestPlugin.FileDescriptor
-  ): ManifestPlugin.FileDescriptor {
-    // 删除 .js 后缀，方便直接使用 obj.name 来访问
-    if (file.name && /\.js$/.test(file.name)) {
-      file.name = file.name.slice(0, -3)
-    }
-    return file
-  }
+  let staticAssets = await getStaticAssets(root)
+
   const ManifestPluginOption: ManifestPlugin.Options = {
     fileName: config.assetsPath,
-    map: ManifestPluginMap,
+    generate: (_seed, files, _entries) => {
+      const assets = { ...staticAssets } as Record<string, string>
+
+      for (const file of files) {
+        if (!file.name) {
+          continue
+        }
+
+        assets[file.name] = file.path
+
+        // 生成一个不带后缀的文件名
+        // assets.vendor 可以访问到 vendor.js
+        // assets.index 可以访问到 index.js
+        if (file.name && /\.js$/.test(file.name)) {
+          assets[file.name.slice(0, -3)] = file.path
+        }
+      }
+
+      return assets
+    }
   }
   let plugins = [
     !isServer && new ManifestPlugin(ManifestPluginOption),

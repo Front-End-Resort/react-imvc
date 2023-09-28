@@ -17,8 +17,8 @@ function standardize(url: string): string {
 describe('build', () => {
   describe('createWebpackConfig', () => {
     describe('isServer should avaliable', () => {
-      it('isServer is true', () => {
-        const config = createWebpackConfig(defaultConfig, true)
+      it('isServer is true', async () => {
+        const config = await createWebpackConfig(defaultConfig, true)
 
         expect(config.target).toBe('node')
         expect(config.entry).toBeDefined()
@@ -43,8 +43,8 @@ describe('build', () => {
         })
       })
 
-      it('isServer is false', () => {
-        const config = createWebpackConfig(defaultConfig)
+      it('isServer is false', async () => {
+        const config = await createWebpackConfig(defaultConfig)
 
         expect(config.target).toBe('web')
         expect(config.entry).toBeDefined()
@@ -76,10 +76,10 @@ describe('build', () => {
 
     describe('NODE_ENV', () => {
       describe('production', () => {
-        it('isServer is true', () => {
+        it('isServer is true', async () => {
           process.env.NODE_ENV = 'production'
           const options = Object.assign(defaultConfig)
-          const config = createWebpackConfig(options, true)
+          const config = await createWebpackConfig(options, true)
 
           expect(config.mode).toBe('production')
           expect(config.watch).toBeFalsy()
@@ -97,10 +97,10 @@ describe('build', () => {
           }
         })
 
-        it('isServer is false', () => {
+        it('isServer is false', async () => {
           process.env.NODE_ENV = 'production'
           const options = Object.assign(defaultConfig)
-          const config = createWebpackConfig(options)
+          const config = await createWebpackConfig(options)
 
           expect(config.mode).toBe('production')
           expect(config.watch).toBeFalsy()
@@ -128,10 +128,10 @@ describe('build', () => {
       })
 
       describe('development', () => {
-        it('isServer is true', () => {
+        it('isServer is true', async () => {
           process.env.NODE_ENV = 'development'
           const options = Object.assign(defaultConfig)
-          const config = createWebpackConfig(options, true)
+          const config = await createWebpackConfig(options, true)
 
           expect(config.mode).toBe('development')
           expect(config.watch).toBeTruthy()
@@ -150,10 +150,10 @@ describe('build', () => {
           })
         })
 
-        it('isServer is false', () => {
+        it('isServer is false', async () => {
           process.env.NODE_ENV = 'development'
           const options = Object.assign(defaultConfig)
-          const config = createWebpackConfig(options)
+          const config = await createWebpackConfig(options)
 
           expect(config.mode).toBe('development')
           expect(config.watch).toBeTruthy()
@@ -174,10 +174,10 @@ describe('build', () => {
       })
 
       describe('test', () => {
-        it('isServer is true', () => {
+        it('isServer is true', async () => {
           process.env.NODE_ENV = 'test'
           const options = Object.assign(defaultConfig)
-          const config = createWebpackConfig(options, true)
+          const config = await createWebpackConfig(options, true)
 
           expect(config.mode).toBe('development')
           expect(config.watch).toBeFalsy()
@@ -196,10 +196,10 @@ describe('build', () => {
           })
         })
 
-        it('isServer is false', () => {
+        it('isServer is false', async () => {
           process.env.NODE_ENV = 'test'
           const options = Object.assign(defaultConfig)
-          const config = createWebpackConfig(options)
+          const config = await createWebpackConfig(options)
 
           expect(config.mode).toBe('development')
           expect(config.watch).toBeFalsy()

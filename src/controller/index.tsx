@@ -289,7 +289,7 @@ export default class Controller<
         // 保留原有的 querystring
         return `${realAssetPath}?${search}`
       }
-      
+
       return realAssetPath
     }
 
@@ -302,12 +302,24 @@ export default class Controller<
 
     return assetPath
   }
+
+  /**
+   * 是否在 preload 里禁用 publicPath
+   * 默认为 false，只对 CRS 生效
+   * 如果为 true，会直接使用 node.js 服务端的静态资源路径
+   */
+  disablePublicPathForPreload = false
+
   /**
    * 预加载 css 样式等资源
    */
   fetchPreload(preload?: Preload) {
     preload = preload || this.preload || {}
     let keys = Object.keys(preload)
+
+    let basename = this.context.basename ?? ''
+    let staticPath = this.context.staticPath ?? ''
+    let localPublicPath = basename + staticPath
 
     if (keys.length === 0) {
       return
@@ -328,7 +340,11 @@ export default class Controller<
           // 在服务端应请求本地的资源
           url = context.serverPublicPath + url
         } else if (context.isClient) {
-          url = context.publicPath + url
+          if (this.disablePublicPathForPreload) {
+            url = localPublicPath + url
+          } else {
+            url = context.publicPath + url
+          }
         }
       }
 

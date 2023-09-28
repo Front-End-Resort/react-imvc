@@ -179,6 +179,7 @@ export default async function createExpressApp(
     let context = {
       basename,
       publicPath,
+      staticPath: config.staticPath,
       restapi: config.restapi,
       ...config.context,
       preload: {},

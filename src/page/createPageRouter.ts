@@ -217,6 +217,7 @@ export default async function createPageRouter(options: EntireConfig): Promise<R
       basename,
       serverPublicPath,
       publicPath,
+      staticPath: config.staticPath,
       restapi: config.serverRestapi || config.restapi || '',
       ...config.context,
       preload: {},

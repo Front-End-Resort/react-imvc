@@ -74,6 +74,7 @@ export interface Context extends BaseContext {
   basename?: string
   env: string
   preload?: Preload
+  staticPath?: string
   publicPath?: string
   location: HistoryLocation
   restapi?: string

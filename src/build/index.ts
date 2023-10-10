@@ -11,17 +11,31 @@ import type { Options, EntireConfig, AppSettings } from '..'
 
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
+import { revStaticAssets } from './assetsHelper'
 
 export default function build(options: Options): Promise<EntireConfig | void> {
   const config = getConfig(options, true)
   const delPublicPgs = () => delPublish(path.join(config.root, config.publish))
   const startGulpPgs = () => startGulp(config)
-  const startWebpackPgs = () => new Promise((resolve) => {
-    Promise.all([
+  const startWebpackPgs = async () => {
+    await Promise.all([
       startWebpackForClient(config),
       startWebpackForServer(config),
-    ]).then(resolve)
-  })
+    ])
+
+    const staticPath = path.join(config.root, config.publish, config.static)
+    const assetsPath = path.join(staticPath, config.assetsPath)
+    const assets = require(assetsPath)
+
+    const manifest = await revStaticAssets(staticPath)
+
+    const mergedAssets = {
+      ...assets,
+      ...manifest,
+    }
+
+    fs.writeFileSync(assetsPath, JSON.stringify(mergedAssets, null, 2))
+  }
 
   const startStaticEntryPgs = () => startStaticEntry(config)
   const errorHandler = (error: Error) => {

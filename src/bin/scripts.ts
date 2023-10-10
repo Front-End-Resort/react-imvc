@@ -11,6 +11,8 @@ let params = getKeys(query).map((key) => {
   return query[key] ? `--${key}=${query[key]}` : `--${key}`
 })
 let result: SpawnSyncReturns<Buffer> | undefined = void 0
+let nodeMajorVersion = Number(process.versions.node.split('.')[0])
+
 
 switch (script) {
   case 'build':
@@ -18,7 +20,12 @@ switch (script) {
   case 'test':
     result = spawn.sync(
       'node',
-      params.concat(require.resolve('../scripts/' + script), args),
+      [
+        nodeMajorVersion >= 18 ? '--openssl-legacy-provider' : '',
+        ...params,
+        require.resolve('../scripts/' + script),
+        ...args,
+      ].filter(Boolean),
       {
         stdio: 'inherit',
       }
@@ -34,16 +41,16 @@ if (result) {
     case 'SIGKILL':
       console.log(
         'The build failed because the process exited too early. ' +
-          'This probably means the system ran out of memory or someone called ' +
-          '`kill -9` on the process.'
+        'This probably means the system ran out of memory or someone called ' +
+        '`kill -9` on the process.'
       )
       process.exit(1)
       break
     case 'SIGTERM':
       console.log(
         'The build failed because the process exited too early. ' +
-          'Someone might have called `kill` or `killall`, or the system could ' +
-          'be shutting down.'
+        'Someone might have called `kill` or `killall`, or the system could ' +
+        'be shutting down.'
       )
       process.exit(1)
       break

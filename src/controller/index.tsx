@@ -271,10 +271,6 @@ export default class Controller<
    * 基于 webpack 构建的 assets.json 获取客户端的静态资源路径
    */
   getClientAssetPath(assetPath: string): string {
-    if (this.context.isServer) {
-      return assetPath
-    }
-
     let [pathname, search] = assetPath.split('?')
 
     let assets: Record<string, string> = this.context.assets ?? {}
@@ -300,7 +296,13 @@ export default class Controller<
       return this.getClientAssetPath(assetPath.slice(1))
     }
 
-    return assetPath
+    return '/' + assetPath
+  }
+
+  getClientAssetFullPath(assetPath: string): string {
+    let { publicPath } = this.context
+    let clientAssetPath = this.getClientAssetPath(assetPath)
+    return publicPath + clientAssetPath
   }
 
   /**

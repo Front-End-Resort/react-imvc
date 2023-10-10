@@ -9,8 +9,8 @@ import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import configBabel from '../config/babel'
 import shareRoot from '../middleware/shareRoot'
-import * as setupDevEnv from '../build/setup-dev-env'
-import { getAssets, getStaticAssets, readAssets } from '../build/assets-helper'
+import * as setupDevEnv from '../build/setupDevEnv'
+import { getAssets, getStaticAssets, readAssets } from '../build/assetsHelper'
 
 import type { EntireConfig, Req } from '..'
 

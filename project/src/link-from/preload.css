@@ -1,3 +1,4 @@
 .active {
-  color: 'red'
+  color: 'red';
+  background-image: url("/img/react.png");
 }

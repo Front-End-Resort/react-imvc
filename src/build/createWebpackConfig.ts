@@ -10,7 +10,7 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import type { EntireConfig } from '..'
 import { checkFilename } from './compileNodeModules'
-import { getStaticAssets } from './assets-helper'
+import { getStaticAssets } from './assetsHelper'
 
 export default async function createWebpackConfig(
   options: EntireConfig,
@@ -47,6 +47,8 @@ export default async function createWebpackConfig(
     globalObject: 'this',
   }
 
+  const staticDir = path.join(config.root, config.publish, config.static)
+
   if (isServer) {
     result.target = 'node'
     defaultOutput = {
@@ -59,7 +61,7 @@ export default async function createWebpackConfig(
   } else {
     defaultOutput = {
       ...defaultOutput,
-      path: path.join(config.root, config.publish, config.static),
+      path: staticDir,
       filename: `js/[name].js`,
       chunkFilename: `js/[name].js`,
     }

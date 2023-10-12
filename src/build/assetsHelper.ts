@@ -52,7 +52,7 @@ export const revStaticAssets = async (dir: string) => {
 
     await Promise.all(files.map(async filePath => {
         const fullFilePath = path.join(dir, filePath)
-        const fileContent = await fs.readFile(fullFilePath, 'utf-8')
+        const fileContent = await fs.readFile(fullFilePath)
         const revFilePath = await getHashFilename(filePath, fileContent)
         const fullRevFilePath = path.join(dir, revFilePath)
 

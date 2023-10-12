@@ -518,6 +518,13 @@ export interface EntireConfig {
    * 编译入口
    */
   entry?: string | string[] | webpack.Entry | webpack.EntryFunc
+
+  /**
+   * useContentHash
+   * 使用 contenthash 作为静态资源的 hash
+   * 默认为 false
+   */
+  useContentHash?: boolean
 }
 
 export const defineConfig = (config: Config): Config => {

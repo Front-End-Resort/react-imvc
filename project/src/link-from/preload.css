@@ -1,4 +1,7 @@
 .active {
   color: 'red';
-  background-image: url("/img/react.png");
+  background-image: url("@public_path/img/react.png");
+  display: block;
+  width: 267px;
+  height: 189px;
 }

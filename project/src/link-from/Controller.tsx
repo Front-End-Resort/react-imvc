@@ -6,7 +6,7 @@ import Style from '../../../src/component/Style'
 import Controller from '../../../src/controller'
 
 export default class extends Controller<{}, {}> {
-  SSR = true // enable server side rendering
+  SSR = this.location.query.ssr !== '0'
   View = View
   preload = {
     css: '/link-from/preload.css',

@@ -21,7 +21,7 @@ export const getStaticFiles = async (dir: string) => {
  * get html/css/javascript in target dir
  */
 export const getHtmlCssJsFiles = async (dir: string) => {
-    const files = await fg([`**/*.@(html|css|js)`], {
+    const files = await fg([`**/*.@(html|css|js|map)`], {
         cwd: dir
     })
 
@@ -45,16 +45,16 @@ export const getStaticAssets = async (dir: string) => {
     return assets
 }
 
-export const revStaticAssets = async (dir: string) => {
-    const files = await getStaticFiles(dir)
+export const revStaticAssets = async (staticDir: string, replaceDir: string) => {
+    const files = await getStaticFiles(staticDir)
 
     const manifest = {} as Record<string, string>
 
     await Promise.all(files.map(async filePath => {
-        const fullFilePath = path.join(dir, filePath)
+        const fullFilePath = path.join(staticDir, filePath)
         const fileContent = await fs.readFile(fullFilePath)
         const revFilePath = await getHashFilename(filePath, fileContent)
-        const fullRevFilePath = path.join(dir, revFilePath)
+        const fullRevFilePath = path.join(staticDir, revFilePath)
 
         await Promise.all([
             fs.writeFile(fullRevFilePath, fileContent),
@@ -64,10 +64,10 @@ export const revStaticAssets = async (dir: string) => {
         manifest[filePath] = revFilePath
     }))
 
-    const htmlCssJsFiles = await getHtmlCssJsFiles(dir)
+    const htmlCssJsFiles = await getHtmlCssJsFiles(replaceDir)
 
     await Promise.all(htmlCssJsFiles.map(async filePath => {
-        const fullFilePath = path.join(dir, filePath)
+        const fullFilePath = path.join(replaceDir, filePath)
         const fileContent = await fs.readFile(fullFilePath, 'utf-8')
         const revFileContent = replace(fileContent, manifest)
 

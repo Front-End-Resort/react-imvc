@@ -241,6 +241,24 @@ restapi basename，如果配置了这个属性，controller.fetch 方法将为�
 
 类型：`boolean`，默认值：`false`，开启后支持 `import` 静态资源，如 `import logo from './logo.png'`，logo 的值为打包后的文件名。
 
+```typescript
+import style from './style.css'
+
+export default class extends Controller {
+    preload = {
+        style: style
+    }
+}
+```
+
+对于 `TypeScript 项目`，需在 `src/type.d.ts` 中添加以下声明：
+
+```typescript
+/// <reference types="react-imvc/imvc-types" />
+```
+
+引入 `react-imvc/imvc-types` 类型声明，以便获得类型提示。
+
 * compileNodeModules
 
 编译 node_modules 模块选项，可选，对象类型，

@@ -11,39 +11,42 @@ import type { Options, EntireConfig, AppSettings } from '..'
 
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
-import { revStaticAssets } from './assetsHelper'
+import { revStaticAssets, replaceManifestInDir } from './assetsHelper'
 
 export default function build(options: Options): Promise<EntireConfig | void> {
   const config = getConfig(options, true)
   const delPublicPgs = () => delPublish(path.join(config.root, config.publish))
   const startGulpPgs = () => startGulp(config)
   const startWebpackPgs = async () => {
+    const publishPath = path.join(config.root, config.publish)
+    const staticPath = path.join(publishPath, config.static)
+    let gulpAssets: Record<string, string> | null = null
+
+    if (config.useContentHash) {
+      gulpAssets = await revStaticAssets(staticPath)
+    }
+
     await Promise.all([
       startWebpackForClient(config),
       startWebpackForServer(config),
     ])
 
-    if (!config.useContentHash) {
+    if (!gulpAssets) {
       return
     }
 
-    const publishPath = path.join(config.root, config.publish)
-    const staticPath = path.join(publishPath, config.static)
     const assetsPath = path.join(staticPath, config.assetsPath)
-    const assets = require(assetsPath)
-
-    /**
-     * add content-hash for static assets in staticPath
-     * and replace the path in html/css/js files in publishPath
-     */
-    const manifest = await revStaticAssets(staticPath, publishPath)
+    const webpackAssets = require(assetsPath)
 
     const mergedAssets = {
-      ...assets,
-      ...manifest,
+      ...gulpAssets,
+      ...webpackAssets,
     }
 
+    await replaceManifestInDir(publishPath, gulpAssets)
+
     fs.writeFileSync(assetsPath, JSON.stringify(mergedAssets, null, 2))
+
   }
 
   const startStaticEntryPgs = () => startStaticEntry(config)

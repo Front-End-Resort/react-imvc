@@ -525,6 +525,11 @@ export interface EntireConfig {
    * 默认为 false
    */
   useContentHash?: boolean
+
+  /**
+   * 是否使用 file-loader 处理 css/img 等静态资源
+   */
+  useFileLoader?: boolean
 }
 
 export const defineConfig = (config: Config): Config => {

@@ -10,7 +10,7 @@ import cookieParser from 'cookie-parser'
 import configBabel from '../config/babel'
 import shareRoot from '../middleware/shareRoot'
 import * as setupDevEnv from '../build/setupDevEnv'
-import { getAssets, getStaticAssets, readAssets } from '../build/assetsHelper'
+import { readAssets } from '../build/assetsHelper'
 
 import type { EntireConfig, Req } from '..'
 
@@ -115,19 +115,12 @@ export default async function createExpressApp(
       express.static(path.join(config.root, config.src))
     )
 
-    const staticAssets = await getStaticAssets(path.join(config.root, config.src))
-
     // 开发模式用 webpack-dev-middleware 获取 assets
     app.use(async (req, res, next) => {
       const assetsPath = path.join(config.root, config.publish, config.static, config.assetsPath)
       const assetsJson = JSON.parse(res.locals.fs.readFileSync(assetsPath, 'utf-8'))
 
-      res.locals.assets = getAssets(
-        {
-          ...staticAssets,
-          ...assetsJson
-        }
-      )
+      res.locals.assets = assetsJson
       next()
     })
   } else {

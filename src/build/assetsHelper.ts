@@ -5,15 +5,11 @@ import fs from 'fs-extra'
 
 import { EntireConfig } from '..'
 
-export const getStaticFiles = async (dir: string) => {
-    const files = await fg([
-        // match all non-js/ts/jsx/tsx files
-        `**/!(*.@(js|ts|jsx|tsx))`,
-        // match all files in lib
-        `lib/**/*`,
-    ], {
+export const getAllFiles = async (dir: string) => {
+    const files = await fg([`**/*`], {
         cwd: dir
     })
+
     return files.map(file => file.replaceAll(path.sep, '/'))
 }
 
@@ -28,25 +24,8 @@ export const getHtmlCssJsFiles = async (dir: string) => {
     return files.map(file => file.replaceAll(path.sep, '/'))
 }
 
-/**
- * get static assets which are not js/ts/jsx/tsx files in cwd
- * will merge into webpack assets.json
- * @param dir 
- * @returns 
- */
-export const getStaticAssets = async (dir: string) => {
-    const files = await getStaticFiles(dir)
-    const assets = {} as Record<string, string>
-
-    for (const file of files) {
-        assets[file] = file
-    }
-
-    return assets
-}
-
-export const revStaticAssets = async (staticDir: string, replaceDir: string) => {
-    const files = await getStaticFiles(staticDir)
+export const revStaticAssets = async (staticDir: string) => {
+    const files = await getAllFiles(staticDir)
 
     const manifest = {} as Record<string, string>
 
@@ -64,6 +43,11 @@ export const revStaticAssets = async (staticDir: string, replaceDir: string) => 
         manifest[filePath] = revFilePath
     }))
 
+    return manifest
+}
+
+
+export const replaceManifestInDir = async (replaceDir: string, manifest: Record<string, string>) => {
     const htmlCssJsFiles = await getHtmlCssJsFiles(replaceDir)
 
     await Promise.all(htmlCssJsFiles.map(async filePath => {
@@ -75,9 +59,8 @@ export const revStaticAssets = async (staticDir: string, replaceDir: string) => 
             await fs.writeFile(fullFilePath, revFileContent)
         }
     }))
-
-    return manifest
 }
+
 
 
 export function getAssets(stats: Record<string, any>): Record<string, string> {

@@ -4,12 +4,14 @@ import Link from '../../../src/component/Link'
 import NavLink from '../../../src/component/NavLink'
 import Style from '../../../src/component/Style'
 import Controller from '../../../src/controller'
+import { useModelState } from '../../../src/hook'
+import style from './preload.css'
 
 export default class extends Controller<{}, {}> {
   SSR = this.location.query.ssr !== '0'
   View = View
   preload = {
-    css: '/link-from/preload.css',
+    css: style,
   }
   constructor(location: Location, context: Context) {
     super(location, context)
@@ -17,6 +19,7 @@ export default class extends Controller<{}, {}> {
 }
 
 function View() {
+  const state = useModelState()
   return (
     <div id="link_from">
       <Style name="css" />
@@ -48,6 +51,9 @@ function View() {
       >
         link to
       </NavLink>
+
+      <img src={state.publicPath + '/img/happy.svg'} />
+      <div className='inactive' style={{ width: 915, height: 601 }} />
     </div>
   )
 }

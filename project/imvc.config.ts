@@ -10,6 +10,7 @@ const config: Config = {
   layout: 'Layout', // 自定义 Layout
   publish: '../publish',
   useContentHash: true,
+  useFileLoader: true,
 }
 
 export default config

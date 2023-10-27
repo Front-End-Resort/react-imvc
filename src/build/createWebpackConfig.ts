@@ -10,7 +10,6 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import type { EntireConfig } from '..'
 import { checkFilename } from './compileNodeModules'
-import { getStaticAssets } from './assetsHelper'
 
 export default async function createWebpackConfig(
   options: EntireConfig,
@@ -69,12 +68,11 @@ export default async function createWebpackConfig(
 
   let output = Object.assign(defaultOutput, config.output)
 
-  let staticAssets = await getStaticAssets(root)
 
   const ManifestPluginOption: ManifestPlugin.Options = {
     fileName: config.assetsPath,
     generate: (_seed, files, _entries) => {
-      const assets = { ...staticAssets } as Record<string, string>
+      const assets = {} as Record<string, string>
 
       for (const file of files) {
         if (!file.name) {
@@ -155,8 +153,8 @@ export default async function createWebpackConfig(
       output = Object.assign(
         defaultOutput,
         !isServer && {
-          filename: 'js/[name]-[contenthash:6].js',
-          chunkFilename: 'js/[name]-[contenthash:6].js',
+          filename: 'js/[name]-[contenthash:10].js',
+          chunkFilename: 'js/[name]-[contenthash:10].js',
           devtoolModuleFilenameTemplate,
         },
         config.productionOutput
@@ -269,6 +267,31 @@ export default async function createWebpackConfig(
         options: babelOptions,
       }
     )
+  }
+
+  if (config.useFileLoader) {
+    moduleRulesConfig = moduleRulesConfig.concat({
+      test: /\.(png|jpe?g|gif|css)$/i,
+      loader: 'file-loader',
+      options: {
+        name: isProd ? '[name]-[contenthash:10].[ext]' : '[name].[ext]',
+        emitFile: !isServer,
+        outputPath: (url: string, resourcePath: string, context: string) => {
+          const outputFilename = path.basename(url)
+          const outputPath = resourcePath.replace(context + path.sep, '')
+          const outputDirname = path.dirname(outputPath)
+
+          return path.join(outputDirname, outputFilename).replaceAll(path.sep, '/')
+        },
+        publicPath: (url: string, resourcePath: string, context: string) => {
+          const outputFilename = path.basename(url)
+          const outputPath = resourcePath.replace(context, '')
+          const outputDirname = path.dirname(outputPath)
+
+          return path.join(outputDirname, outputFilename).replaceAll(path.sep, '/')
+        }
+      },
+    })
   }
 
   moduleRulesConfig = moduleRulesConfig.concat(

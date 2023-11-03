@@ -44,6 +44,7 @@ function createConfig(options: EntireConfig): GulpTaskConfig {
     },
     publishCopy: {
       src: [
+        root + '/*',
         root + `/!(node_modules|buildportal-script)/**/*`,
         `!${root}/@(node_modules|buildportal-script)/**`,
         `!${path.join(root, options.publish, '**')}`

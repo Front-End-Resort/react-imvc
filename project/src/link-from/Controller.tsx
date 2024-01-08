@@ -16,6 +16,7 @@ export default class extends Controller<{}, {}> {
   constructor(location: Location, context: Context) {
     super(location, context)
   }
+  publicPathPlaceholder = '#public_path'
 }
 
 function View() {

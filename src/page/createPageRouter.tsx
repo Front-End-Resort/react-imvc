@@ -256,7 +256,21 @@ export default async function createPageRouter(options: EntireConfig): Promise<R
       }
 
       // 支持通过 res.locals.layoutView 动态确定 layoutView
-      res.render(res.locals.layoutView || layoutView, data)
+      const finalLayoutPath = res.locals.layoutView
+        ? getRightPath(path.resolve(config.root, config.routes, res.locals.layoutView))
+        : layoutView
+
+      const LayoutView = getModule(require(finalLayoutPath))
+
+      const html = ReactDOMServer.renderToStaticMarkup(
+        <LayoutView {...res.locals} {...data} />
+      )
+
+      if (!res.headersSent) {
+        res.setHeader('Content-Type', 'text/html')
+      }
+
+      res.end(`<!DOCTYPE html>${html}`)
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') {
         console.log(error)

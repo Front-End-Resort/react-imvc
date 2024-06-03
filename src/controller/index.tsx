@@ -31,6 +31,13 @@ import type {
   FetchOptions,
 } from '..'
 
+export type EarlyHint = {
+  uri: string
+  [key: string]: string
+}
+
+export type EarlyHints = EarlyHint[]
+
 export type BaseActions = typeof shareActions
 
 declare var __INITIAL_STATE__: (BaseState & { [k: string]: any }) | undefined
@@ -521,6 +528,68 @@ export default class Controller<
     }
   }
 
+  disableEarlyHints = false
+
+  earlyHintsLinks: EarlyHints = []
+
+  addEarlyHintsLinks(earlyHints: EarlyHints) {
+    this.earlyHintsLinks = this.earlyHintsLinks.concat(earlyHints)
+  }
+
+  flushHeaders(headers?: Record<string, string>) {
+    if (this.disableEarlyHints || !this.context.res || this.context.res.headersSent) {
+      return
+    }
+
+    const presetEarlyHints: EarlyHints = [
+      {
+        uri: `${this.context.publicPath}/${this.context.assets.vendor}`,
+        rel: 'prefetch',
+      },
+      {
+        uri: `${this.context.publicPath}/${this.context.assets.index}`,
+        rel: 'prefetch',
+      },
+    ]
+
+    const preloadEarlyHints: EarlyHints = this.SSR !== false ? [] : Object.keys(this.preload).map((name) => {
+      return {
+        uri: this.getClientAssetFullPath(this.preload[name]),
+        rel: 'preload',
+        as: 'style',
+      }
+    })
+
+    const earlyHintsLinks: EarlyHints = this.earlyHintsLinks.map(item => {
+      const { uri, ...rest } = item
+      const url = _.isAbsoluteUrl(uri) ? uri : this.getClientAssetFullPath(uri)
+
+      return {
+        uri: url,
+        ...rest,
+      }
+    })
+
+    const link = [...presetEarlyHints, ...preloadEarlyHints, ...earlyHintsLinks].map((item) => {
+      const { uri, ...rest } = item
+      const result = [`<${uri}>`]
+
+      for (const key in rest) {
+        result.push(`${key}=${rest[key]}`)
+      }
+
+      return result.join('; ')
+    })
+
+    this.context.res?.writeHead(200, 'OK', {
+      'Content-Type': 'text/html, charset=utf-8',
+      ...headers,
+      'Link': link
+    });
+
+    this.context.res?.flushHeaders()
+  }
+
   async init() {
     if (this.errorDidCatch || this.getComponentFallback) {
       this.proxyHandler = proxyReactCreateElement(this)
@@ -565,6 +634,7 @@ export default class Controller<
         SSR = await this.SSR(this.location, this.context)
       }
       if (SSR === false) {
+        this.flushHeaders()
         let View: BaseViewFC | BaseViewClass = this.Loading || EmptyView
         return <View />
       }
@@ -716,6 +786,8 @@ export default class Controller<
     if (promiseList.length) {
       await Promise.all(promiseList)
     }
+
+    this.flushHeaders()
 
     this.bindStoreWithView()
     return this.render()

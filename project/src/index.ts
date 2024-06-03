@@ -109,5 +109,9 @@ export default [
   {
     path: '/lazy',
     controller: import('./lazy/controller'),
+  },
+  {
+    path: '/prefetch-header',
+    controller: import('./prefetch-header/Controller'),
   }
 ]

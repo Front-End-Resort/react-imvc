@@ -118,8 +118,9 @@ export default async function start(options: Options): Promise<Result> {
   // will print stacktrace
   if (app.get('env') === 'development') {
     app.use(devErrorHandler)
+  } else {
+    app.use(prodErrorHandler)
   }
-  app.use(prodErrorHandler)
 
   let promise = new Promise<Result>((resolve, reject) => {
     /**

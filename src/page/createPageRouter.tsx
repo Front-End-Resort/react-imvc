@@ -179,7 +179,7 @@ export default async function createPageRouter(options: EntireConfig): Promise<R
   let layoutView = config.layout
     ? process.env.NODE_ENV !== 'production'
       ? getRightPath(path.resolve(config.root, config.routes, config.layout))
-      : config.layout
+      : path.resolve(config.root, config.routes, config.layout)
     : path.join(__dirname, 'view')
 
   // 纯浏览器端渲染模式，用前置中间件拦截所有请求

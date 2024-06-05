@@ -544,11 +544,13 @@ export default class Controller<
     const presetEarlyHints: EarlyHints = [
       {
         uri: `${this.context.publicPath}/${this.context.assets.vendor}`,
-        rel: 'prefetch',
+        rel: 'preload',
+        as: 'script',
       },
       {
         uri: `${this.context.publicPath}/${this.context.assets.index}`,
-        rel: 'prefetch',
+        rel: 'preload',
+        as: 'script',
       },
     ]
 

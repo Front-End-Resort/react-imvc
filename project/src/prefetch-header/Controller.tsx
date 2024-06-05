@@ -6,7 +6,7 @@ import { Style } from '../../../src/component'
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export default class extends Controller<{}, {}> {
-  SSR = false // enable server side rendering
+  // SSR = false // enable server side rendering
   preload = {
     css: '/style/preload.css',
   }

@@ -28,7 +28,7 @@ export default class extends Controller<{}, {}> {
 
     this.flushHeaders()
 
-    await delay(2000)
+    await delay(500)
   }
   constructor(location: Location, context: Context) {
     super(location, context)

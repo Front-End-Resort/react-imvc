@@ -109,7 +109,7 @@ export default async function start(options: Options): Promise<Result> {
     next
   ) {
     res.status(err.status || 500)
-    res.json(err.message)
+    res.send(err.message)
   }
 
   app.use(addRenderPage as express.RequestHandler)

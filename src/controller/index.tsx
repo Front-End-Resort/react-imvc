@@ -586,10 +586,14 @@ export default class Controller<
     this.context.res?.writeHead(200, 'OK', {
       'Content-Type': 'text/html, charset=utf-8',
       ...headers,
+      // 禁止 nginx 反向代理层缓存
+      'X-Accel-Buffering': 'no',
       'Link': link
     });
 
     this.context.res?.flushHeaders()
+    // 写入空格，保证响应头被发送
+    this.context.res?.write(' ')
   }
 
   async init() {

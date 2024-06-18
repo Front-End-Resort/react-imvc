@@ -530,7 +530,16 @@ export default class Controller<
 
   disableEarlyHints = false
 
-  earlyHintsLinks: EarlyHints = []
+  earlyHintsLinks: EarlyHints = [{
+    uri: `vendor.js`,
+    rel: 'preload',
+    as: 'script',
+  },
+  {
+    uri: `index.js`,
+    rel: 'preload',
+    as: 'script',
+  }]
 
   addEarlyHintsLinks(earlyHints: EarlyHints) {
     this.earlyHintsLinks = this.earlyHintsLinks.concat(earlyHints)
@@ -541,20 +550,7 @@ export default class Controller<
       return
     }
 
-    const presetEarlyHints: EarlyHints = [
-      {
-        uri: `${this.context.publicPath}/${this.context.assets.vendor}`,
-        rel: 'preload',
-        as: 'script',
-      },
-      {
-        uri: `${this.context.publicPath}/${this.context.assets.index}`,
-        rel: 'preload',
-        as: 'script',
-      },
-    ]
-
-    const preloadEarlyHints: EarlyHints = this.SSR !== false ? [] : Object.keys(this.preload).map((name) => {
+    const preloadEarlyHints: EarlyHints = this.SSR !== false ? [] : Object.keys(this.preload ?? {}).map((name) => {
       return {
         uri: this.getClientAssetFullPath(this.preload[name]),
         rel: 'preload',
@@ -572,7 +568,7 @@ export default class Controller<
       }
     })
 
-    const link = [...presetEarlyHints, ...preloadEarlyHints, ...earlyHintsLinks].map((item) => {
+    const link = [...preloadEarlyHints, ...earlyHintsLinks].map((item) => {
       const { uri, ...rest } = item
       const result = [`<${uri}>`]
 
@@ -799,6 +795,8 @@ export default class Controller<
     return this.render()
   }
 
+  disableBatchRefresh = false
+
   bindStoreWithView() {
     let { context, store, history, meta } = this
 
@@ -808,12 +806,18 @@ export default class Controller<
     }
 
     if (store) {
-      let unsubscribe = store.subscribe((data) => {
+      let refresh: Parameters<typeof store.subscribe>[0] = (data) => {
         this.refreshView && this.refreshView()
         if (this.stateDidChange) {
           this.stateDidChange(data)
         }
-      })
+      }
+
+      if (!this.disableBatchRefresh) {
+        refresh = _.debounce(refresh, 5)
+      }
+
+      let unsubscribe = store.subscribe(refresh)
       meta.unsubscribeList.push(unsubscribe)
     }
 

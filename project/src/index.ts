@@ -113,5 +113,9 @@ export default [
   {
     path: '/prefetch-header',
     controller: import('./prefetch-header/Controller'),
+  },
+  {
+    path: '/batch-refresh',
+    controller: import('./batch-refresh/Controller'),
   }
 ]

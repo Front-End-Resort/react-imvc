@@ -159,3 +159,14 @@ export function compareObject(a: object, b: object): boolean {
 export function isIMVCController(fn: any): fn is Controller<any, any> {
   return fn.__SYMBOL === 'REACT_IMVC_CONTROLLER'
 }
+
+
+export function debounce<T>(func: (data: T) => unknown, wait: number): typeof func {
+  let timeout: ReturnType<typeof setTimeout>
+  return function (data: T) {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      func(data)
+    }, wait)
+  }
+}

@@ -161,12 +161,22 @@ export function isIMVCController(fn: any): fn is Controller<any, any> {
 }
 
 
-export function debounce<T>(func: (data: T) => unknown, wait: number): typeof func {
+export function debounce<T>(func: (data: T) => unknown, wait: number) {
   let timeout: ReturnType<typeof setTimeout>
-  return function (data: T) {
+  let currentFn: (() => void) | undefined
+  const flush = () => {
     clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      func(data)
-    }, wait)
+    currentFn?.()
+    currentFn = undefined
   }
+  const debouncedFn = function (data: T) {
+    currentFn = () => {
+      func(data)
+    }
+    timeout = setTimeout(flush, wait)
+  }
+
+  debouncedFn.flush = flush
+
+  return debouncedFn
 }

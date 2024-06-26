@@ -25,7 +25,8 @@ export default class BatchRefreshController extends Controller<{}, {}> {
         }
     }
     initialState = {
-        count: 0
+        count: 0,
+        text: ''
     }
     // 选择是否禁用防抖刷新
     disableBatchRefresh: boolean = false
@@ -40,6 +41,28 @@ export default class BatchRefreshController extends Controller<{}, {}> {
             })
         }, 0)
     }
+
+    handleIncreFlushSync = () => {
+        setTimeout(() => {
+            this.flushSync(() => {
+                this.store.actions.UPDATE_STATE({
+                    count: this.store.getState().count + 1
+                })
+                this.store.actions.UPDATE_STATE({
+                    count: this.store.getState().count + 1
+                })
+            })
+        }, 0)
+
+    }
+
+    handleChange = (text: string) => {
+        this.flushSync(() => {
+            this.store.actions.UPDATE_STATE({
+                text: text
+            })
+        })
+    }
 }
 
 export type ViewProps = {
@@ -48,26 +71,21 @@ export type ViewProps = {
 
 function View({ state }: ViewProps) {
     const ctrl = useCtrl<BatchRefreshController>()
-    const [count, setCount] = useState(0)
 
-    const handleIncre = () => {
-        setTimeout(() => {
-            setCount(count => count + 1)
-            setCount(count => count + 1)
-        }, 0)
-    }
-
-
-    console.log('render', state.count, count)
+    console.log('render', state.count, state.text)
     return (
         <div id="debounce-refresh">
             <div id="count">{state.count}</div>
             <button id="ctrl-incre" onClick={ctrl.handleIncre}>
-                ctrl.incre
+                batch-incre
             </button>
-            <button id="state-incre" onClick={handleIncre}>
-                state.incre
+            <button id="state-incre" onClick={ctrl.handleIncreFlushSync}>
+                flush-incre
             </button>
+            <div>
+                <label>flush-input</label>
+                <input id="text" value={state.text} onChange={(e) => ctrl.handleChange(e.target.value)} />
+            </div>
         </div>
     )
 }

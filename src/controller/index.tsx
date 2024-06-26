@@ -797,6 +797,23 @@ export default class Controller<
 
   disableBatchRefresh = true
 
+  /**
+   * 同步触发 store 的 subscribe 回调，刷新视图
+   * 类似于 react 18 的 flushSync
+   */
+  flushSync(fn: () => void) {
+    if (this.disableBatchRefresh) {
+      fn()
+      return
+    }
+    this.disableBatchRefresh = true
+    try {
+      fn()
+    } finally {
+      this.disableBatchRefresh = false
+    }
+  }
+
   bindStoreWithView() {
     let { context, store, history, meta } = this
 
@@ -806,19 +823,23 @@ export default class Controller<
     }
 
     if (store) {
-      let refresh: Parameters<typeof store.subscribe>[0] = (data) => {
-        if (meta.isDestroyed) return
-        this.refreshView && this.refreshView()
-        if (this.stateDidChange) {
-          this.stateDidChange(data)
+      let refresh = _.debounce(
+        ((data) => {
+          if (meta.isDestroyed) return
+          this.refreshView && this.refreshView()
+          if (this.stateDidChange) {
+            this.stateDidChange(data)
+          }
+        }) as Parameters<typeof store.subscribe>[0],
+        5
+      )
+
+      let unsubscribe = store.subscribe(data => {
+        refresh(data)
+        if (this.disableBatchRefresh) {
+          refresh.flush()
         }
-      }
-
-      if (!this.disableBatchRefresh) {
-        refresh = _.debounce(refresh, 5)
-      }
-
-      let unsubscribe = store.subscribe(refresh)
+      })
       meta.unsubscribeList.push(unsubscribe)
     }
 

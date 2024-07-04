@@ -117,5 +117,9 @@ export default [
   {
     path: '/batch-refresh',
     controller: import('./batch-refresh/Controller'),
+  },
+  {
+    path: '/content-hash',
+    controller: import('./content-hash/Controller'),
   }
 ]

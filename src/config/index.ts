@@ -35,8 +35,21 @@ export default function getConfig(
   if (canUseCache) {
     return configCache
   }
+
   preOptions = options
-  return (configCache = constructConfig(options, shouldCompile))
+
+  configCache = constructConfig(options, shouldCompile)
+
+  if (configCache.useBabelRuntime) {
+    try {
+      require.resolve('@babel/runtime/package.json')
+    } catch (error) {
+      console.error('please install @babel/runtime first, or set useBabelRuntime to false in imvc.config.js file')
+      process.exit(1)
+    }
+  }
+
+  return configCache
 }
 
 function _interopRequireDefault(obj: any) {
@@ -55,7 +68,7 @@ function constructConfig(
     case 'string':
       config = shouldCompile
         ? _interopRequireDefault(requireConfig(path.resolve(options.config)))
-            .default
+          .default
         : _interopRequireDefault(require(path.resolve(options.config))).default
       break
   }

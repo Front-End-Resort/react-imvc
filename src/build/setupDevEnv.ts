@@ -86,7 +86,11 @@ export async function setupServer(
           return runCode(sourceCode)
         }
 
-        return require(modulePath)
+        let moduleFilePath = require.resolve(modulePath, {
+          paths: [outputDir],
+        })
+
+        return require(moduleFilePath)
       }
 
 

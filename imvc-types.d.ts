@@ -1,3 +1,13 @@
+declare module '*.scss' {
+    const src: string
+    export default src
+}
+
+declare module '*.sass' {
+    const src: string
+    export default src
+}
+
 declare module '*.css' {
     const src: string
     export default src

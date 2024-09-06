@@ -11,6 +11,7 @@ const config: Config = {
   publish: '../publish',
   useContentHash: true,
   useFileLoader: true,
+  useSass: true,
 }
 
 export default config

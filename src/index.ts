@@ -530,6 +530,11 @@ export interface EntireConfig {
    * 是否使用 file-loader 处理 css/img 等静态资源
    */
   useFileLoader?: boolean
+
+  /**
+   * 是否使用 sass-loader 处理 scss 文件
+   */
+  useSass?: boolean
 }
 
 export const defineConfig = (config: Config): Config => {

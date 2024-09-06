@@ -8,6 +8,9 @@ import ManifestPlugin from 'webpack-manifest-plugin'
 import nodeExternals from 'webpack-node-externals'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+// @ts-ignore
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+
 import type { EntireConfig } from '..'
 import { checkFilename } from './compileNodeModules'
 
@@ -269,6 +272,64 @@ export default async function createWebpackConfig(
     )
   }
 
+
+  if (config.useSass) {
+    moduleRulesConfig = moduleRulesConfig.concat({
+      test: /\.s[ac]ss$/i,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            name: isProd && config.useContentHash ? '[name]-[contenthash:10].[ext]' : '[name].[ext]',
+            emitFile: !isServer,
+            outputPath: (url: string, resourcePath: string, context: string) => {
+              const isInContext = resourcePath.includes(context)
+              const isInNodeModules = resourcePath.includes('node_modules')
+
+              const outputFilename = path.basename(url)
+              const outputFilePath = resourcePath.replace(context + path.sep, '')
+              let outputDirname = path.dirname(outputFilePath)
+
+              if (isInNodeModules) {
+                const [_, newResourcePath] = resourcePath.split('node_modules' + path.sep)
+
+                outputDirname = path.dirname(newResourcePath)
+              } else if (!isInContext) {
+                throw new Error(`The position of the file is not in the root directory or node_modules directory`)
+              }
+
+              const outputPath = path.join(outputDirname, outputFilename).replaceAll(path.sep, '/').replace(/\.scss$/, '.css')
+
+              return outputPath
+            },
+            publicPath: (url: string, resourcePath: string, context: string) => {
+              const isInContext = resourcePath.includes(context)
+              const isInNodeModules = resourcePath.includes('node_modules')
+
+              const outputFilename = path.basename(url)
+              const outputFilePath = resourcePath.replace(context, '')
+              let outputDirname = path.dirname(outputFilePath)
+
+              if (isInNodeModules) {
+                const [_, newResourcePath] = resourcePath.split('node_modules')
+
+                outputDirname = path.dirname(newResourcePath)
+              } else if (!isInContext) {
+                throw new Error(`The position of the file is not in the root directory or node_modules directory`)
+              }
+
+
+              const publicPath = path.join(outputDirname, outputFilename).replaceAll(path.sep, '/').replace(/\.scss$/, '.css')
+
+              return publicPath
+            }
+          },
+        },
+        'sass-loader',
+      ],
+    })
+  }
+
   if (config.useFileLoader) {
     moduleRulesConfig = moduleRulesConfig.concat({
       test: /\.(png|jpe?g|gif|css)$/i,
@@ -277,18 +338,42 @@ export default async function createWebpackConfig(
         name: isProd ? '[name]-[contenthash:10].[ext]' : '[name].[ext]',
         emitFile: !isServer,
         outputPath: (url: string, resourcePath: string, context: string) => {
+          const isInContext = resourcePath.includes(context)
+          const isInNodeModules = resourcePath.includes('node_modules')
           const outputFilename = path.basename(url)
-          const outputPath = resourcePath.replace(context + path.sep, '')
-          const outputDirname = path.dirname(outputPath)
+          const outputFilePath = resourcePath.replace(context + path.sep, '')
+          let outputDirname = path.dirname(outputFilePath)
 
-          return path.join(outputDirname, outputFilename).replaceAll(path.sep, '/')
+          if (isInNodeModules) {
+            const [_, newResourcePath] = resourcePath.split('node_modules' + path.sep)
+
+            outputDirname = path.dirname(newResourcePath)
+          } else if (!isInContext) {
+            throw new Error(`The position of the file is not in the root directory or node_modules directory`)
+          }
+
+          const outputPath = path.join(outputDirname, outputFilename).replaceAll(path.sep, '/')
+
+          return outputPath
         },
         publicPath: (url: string, resourcePath: string, context: string) => {
+          const isInContext = resourcePath.includes(context)
+          const isInNodeModules = resourcePath.includes('node_modules')
           const outputFilename = path.basename(url)
           const outputPath = resourcePath.replace(context, '')
-          const outputDirname = path.dirname(outputPath)
+          let outputDirname = path.dirname(outputPath)
 
-          return path.join(outputDirname, outputFilename).replaceAll(path.sep, '/')
+          if (isInNodeModules) {
+            const [_, newResourcePath] = resourcePath.split('node_modules')
+
+            outputDirname = path.dirname(newResourcePath)
+          } else if (!isInContext) {
+            throw new Error(`The position of the file is not in the root directory or node_modules directory`)
+          }
+
+          const publicPath = path.join(outputDirname, outputFilename).replaceAll(path.sep, '/')
+
+          return publicPath
         }
       },
     })

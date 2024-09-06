@@ -91,7 +91,8 @@ const defaultConfig: EntireConfig = {
     // 需要编译到 publish 目录的额外文件
     publishBabel: [],
   },
-  useContentHash: false
+  useContentHash: false,
+  useSass: false,
 }
 
 export default defaultConfig

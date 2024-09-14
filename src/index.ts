@@ -33,6 +33,7 @@ import type {
 import type Controller from './controller'
 import type { BaseActions as BA } from './controller'
 import type { CompileNodeModulesOptions } from './build/compileNodeModules'
+import type { Options as SassLoaderOptions } from 'sass-loader'
 
 export type { Action, Curring, Currings, AnyAction, Actions } from 'relite'
 
@@ -534,7 +535,7 @@ export interface EntireConfig {
   /**
    * 是否使用 sass-loader 处理 scss 文件
    */
-  useSass?: boolean
+  useSass?: boolean | SassLoaderOptions
 }
 
 export const defineConfig = (config: Config): Config => {

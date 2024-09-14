@@ -17,6 +17,7 @@
     "preserveConstEnums": true,
     "noImplicitThis": true,
     "resolveJsonModule": true,
+    "downlevelIteration": true,
     "esModuleInterop": true,
     "removeComments": false,
     "jsx": "react",

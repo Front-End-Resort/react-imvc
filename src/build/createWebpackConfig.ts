@@ -8,11 +8,10 @@ import ManifestPlugin from 'webpack-manifest-plugin'
 import nodeExternals from 'webpack-node-externals'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-// @ts-ignore
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 
 import type { EntireConfig } from '..'
 import { checkFilename } from './compileNodeModules'
+import ImvcStylePlugin from './imvc-style-plugin'
 
 export default async function createWebpackConfig(
   options: EntireConfig,
@@ -96,7 +95,6 @@ export default async function createWebpackConfig(
     }
   }
   let plugins = [
-    !isServer && new ManifestPlugin(ManifestPluginOption),
     // Moment.js is an extremely popular library that bundles large locale files
     // by default due to how Webpack interprets its code. This is a practical
     // solution that requires the user to opt into importing specific locales.
@@ -127,6 +125,10 @@ export default async function createWebpackConfig(
       ],
       watch: config.root,
     }),
+    config.useSass && new ImvcStylePlugin({
+      emitFile: !isServer,
+    }),
+    !isServer && new ManifestPlugin(ManifestPluginOption),
   ].filter(Boolean)
 
   // 添加热更新插件
@@ -272,67 +274,81 @@ export default async function createWebpackConfig(
     )
   }
 
+  const imvcStyleLoaderConfig = {
+    loader: require.resolve('./imvc-style-loader'),
+    options: {
+      name: isProd && config.useContentHash ? '[name]-[contenthash:10].[ext]' : '[name].[ext]',
+      emitFile: !isServer,
+      outputPath: (url: string, resourcePath: string, context: string) => {
+        const isInContext = resourcePath.includes(context)
+        const isInNodeModules = resourcePath.includes('node_modules')
+
+        const outputFilename = path.basename(url)
+        const outputFilePath = resourcePath.replace(context + path.sep, '')
+        let outputDirname = path.dirname(outputFilePath)
+
+        if (isInNodeModules) {
+          const [_, newResourcePath] = resourcePath.split('node_modules' + path.sep)
+
+          outputDirname = path.dirname(newResourcePath)
+        } else if (!isInContext) {
+          throw new Error(`The position of the file is not in the root directory or node_modules directory`)
+        }
+
+        const outputPath = path.join(outputDirname, outputFilename).replaceAll(path.sep, '/').replace(/\.scss$/, '.css')
+
+        return outputPath
+      },
+      publicPath: (url: string, resourcePath: string, context: string) => {
+        const isInContext = resourcePath.includes(context)
+        const isInNodeModules = resourcePath.includes('node_modules')
+
+        const outputFilename = path.basename(url)
+        const outputFilePath = resourcePath.replace(context, '')
+        let outputDirname = path.dirname(outputFilePath)
+
+        if (isInNodeModules) {
+          const [_, newResourcePath] = resourcePath.split('node_modules')
+
+          outputDirname = path.dirname(newResourcePath)
+        } else if (!isInContext) {
+          throw new Error(`The position of the file is not in the root directory or node_modules directory`)
+        }
+
+
+        const publicPath = path.join(outputDirname, outputFilename).replaceAll(path.sep, '/').replace(/\.scss$/, '.css')
+
+        return publicPath
+      }
+    },
+  }
+
 
   if (config.useSass) {
     moduleRulesConfig = moduleRulesConfig.concat({
       test: /\.s[ac]ss$/i,
       use: [
+        imvcStyleLoaderConfig,
         {
-          loader: 'file-loader',
-          options: {
-            name: isProd && config.useContentHash ? '[name]-[contenthash:10].[ext]' : '[name].[ext]',
-            emitFile: !isServer,
-            outputPath: (url: string, resourcePath: string, context: string) => {
-              const isInContext = resourcePath.includes(context)
-              const isInNodeModules = resourcePath.includes('node_modules')
-
-              const outputFilename = path.basename(url)
-              const outputFilePath = resourcePath.replace(context + path.sep, '')
-              let outputDirname = path.dirname(outputFilePath)
-
-              if (isInNodeModules) {
-                const [_, newResourcePath] = resourcePath.split('node_modules' + path.sep)
-
-                outputDirname = path.dirname(newResourcePath)
-              } else if (!isInContext) {
-                throw new Error(`The position of the file is not in the root directory or node_modules directory`)
-              }
-
-              const outputPath = path.join(outputDirname, outputFilename).replaceAll(path.sep, '/').replace(/\.scss$/, '.css')
-
-              return outputPath
-            },
-            publicPath: (url: string, resourcePath: string, context: string) => {
-              const isInContext = resourcePath.includes(context)
-              const isInNodeModules = resourcePath.includes('node_modules')
-
-              const outputFilename = path.basename(url)
-              const outputFilePath = resourcePath.replace(context, '')
-              let outputDirname = path.dirname(outputFilePath)
-
-              if (isInNodeModules) {
-                const [_, newResourcePath] = resourcePath.split('node_modules')
-
-                outputDirname = path.dirname(newResourcePath)
-              } else if (!isInContext) {
-                throw new Error(`The position of the file is not in the root directory or node_modules directory`)
-              }
-
-
-              const publicPath = path.join(outputDirname, outputFilename).replaceAll(path.sep, '/').replace(/\.scss$/, '.css')
-
-              return publicPath
-            }
+          loader: "sass-loader",
+          options: typeof config.useSass !== 'boolean' ? config.useSass : {
+            implementation: require("sass"),
           },
         },
-        'sass-loader',
       ],
     })
   }
 
   if (config.useFileLoader) {
     moduleRulesConfig = moduleRulesConfig.concat({
-      test: /\.(png|jpe?g|gif|css)$/i,
+      test: /\.css$/i,
+      use: [
+        imvcStyleLoaderConfig
+      ],
+    })
+
+    moduleRulesConfig = moduleRulesConfig.concat({
+      test: /\.(png|jpe?g|gif|svg)$/i,
       loader: 'file-loader',
       options: {
         name: isProd ? '[name]-[contenthash:10].[ext]' : '[name].[ext]',

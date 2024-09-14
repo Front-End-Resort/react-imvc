@@ -1,6 +1,9 @@
 import Controller from '../../../src/controller'
 import React from 'react'
 import { Location, Context } from '../../../src/'
+import "../img/react.png"
+import "test-pkg/dist/test-use"
+
 export default class extends Controller<{}, {}> {
   SSR = false // disable server side rendering
   View = View

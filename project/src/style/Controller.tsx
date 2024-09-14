@@ -3,24 +3,28 @@ import { Location, Context } from '../../../src/'
 import Controller from '../../../src/controller'
 import { Style } from '../../../src/component'
 import useCtrl from '../../../src/hook/useCtrl'
-import commonStyle from "./common.scss"
+import controllerStyle from "./controller.scss"
 import testSassFromPkg from 'test-pkg/dist/style.scss'
 import testCssFromPkg from 'test-pkg/dist/test-css.css'
 import testImgFromPkg from 'test-pkg/dist/react.png'
+import preloadCss from './preload.css'
+import testUse from "test-pkg/dist/test-use"
+import "../img/react.png"
 
 console.log('test', {
-  commonStyle,
+  testUse,
+  commonStyle: controllerStyle,
   testSassFromPkg,
   testCssFromPkg,
   testImgFromPkg
 })
 
 export default class StyleController extends Controller<{}, {}> {
-  // SSR = false // enable server side rendering
+  SSR = this.location.query.ssr !== 'false'
   View = View
   preload = {
-    css: '/style/preload.css',
-    common: commonStyle,
+    css: preloadCss,
+    controllerStyle,
     testSassFromPkg,
     testCssFromPkg
   }
@@ -41,7 +45,7 @@ function View() {
   return (
     <div id="style">
       <Style name="css" />
-      <Style name="common" />
+      <Style name="controllerStyle" />
       <Style name="testSassFromPkg" />
       <Style name="testCssFromPkg" />
       <div className="style">

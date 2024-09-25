@@ -8,6 +8,7 @@ Sass 是一种 CSS 预处理器，它提供了一些便利的功能，使得 CSS
 
 所以，sass 的收集是一个 `build-time` 的新增功能，不会增加 `runtime` 的复杂度。
 
+注意：只有文件名为`controller|Controller`作为入口文件的`controller.css`文件才会触发收集。
 
 ## 配置
 

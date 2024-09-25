@@ -21,6 +21,7 @@ import type {
   ViewEngineRender,
 } from 'create-app/server'
 import type { EntireConfig, AppSettings, Req } from '..'
+import { Stream } from 'stream'
 
 function getModule(module: any) {
   return module.default || module
@@ -43,6 +44,20 @@ function commonjsLoader(
     return getModule(ctrl)
   }
 }
+
+const getStreamBuffer = (stream: Stream) => {
+  return new Promise<Buffer>((resolve, reject) => {
+    let buffers = [] as Buffer[]
+    stream.on('data', chunk => buffers.push(chunk))
+    stream.on('end', () => resolve(Buffer.concat(buffers)))
+    stream.on('error', reject)
+  })
+}
+
+const isStream = (stream: any): stream is Stream => {
+  return !!stream && typeof stream.pipe === 'function'
+}
+
 
 /**
  * controller 里会劫持 React.createElement
@@ -165,11 +180,26 @@ export default async function createPageRouter(options: EntireConfig): Promise<R
     React.ReactElement,
     Controller<any, any>
   > = renderers[config.renderMode] || renderToNodeStream
+
   let serverAppSettings: AppSettings = {
     loader: commonjsLoader,
     routes: routes,
-    // @ts-ignore
-    viewEngine: { render },
+    viewEngine: {
+      // @ts-ignore
+      render: (view, controller) => {
+        if (config.serverRenderer) {
+          const result = config.serverRenderer(view, controller)
+          if (Buffer.isBuffer(result)) {
+            return result.toString()
+          } else if (isStream(result)) {
+            return getStreamBuffer(result).then(buffer => buffer.toString())
+          } else {
+            return result
+          }
+        }
+        return render(view, controller as any)
+      }
+    },
     context: {
       isClient: false,
       isServer: true,

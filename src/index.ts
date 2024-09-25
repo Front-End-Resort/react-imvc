@@ -536,6 +536,14 @@ export interface EntireConfig {
    * 是否使用 sass-loader 处理 scss 文件
    */
   useSass?: boolean | SassLoaderOptions
+
+  /**
+  * 服务端渲染器
+  * 默认为空
+  * 
+  * 支持：(view: React.ReactElement) => Promise<string | Buffer | NodeJS.ReadableStream> | string | Buffer | NodeJS.ReadableStream
+  */
+  serverRenderer?: (view: React.ReactElement, controller: any) => Promise<string | Buffer | NodeJS.ReadableStream> | string | Buffer | NodeJS.ReadableStream
 }
 
 export const defineConfig = (config: Config): Config => {

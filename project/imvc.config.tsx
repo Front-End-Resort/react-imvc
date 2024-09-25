@@ -1,3 +1,6 @@
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+import Script from '../src/component/Script'
 import { Config } from '../src'
 
 let PORT = 3000
@@ -12,6 +15,17 @@ const config: Config = {
   useContentHash: true,
   useFileLoader: true,
   useSass: true,
+  serverRenderer: view => {
+    return renderToString(<>
+      <Script>
+        {`
+        console.log('serverRenderer')
+        document.currentScript.remove()
+        `}
+      </Script>
+      {view}
+    </>)
+  }
 }
 
 export default config

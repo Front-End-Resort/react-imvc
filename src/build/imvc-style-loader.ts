@@ -85,10 +85,24 @@ const travelDownModule = (
             return
         }
 
+        /**
+         * handle dependencies
+         */
         for (const dependency of (currentModule as any).dependencies) {
             if (dependency.module) {
                 if (!visited.has(dependency.module)) {
                     queue.push(dependency.module)
+                }
+            }
+        }
+
+        /**
+         * handle concatenated modules
+         */
+        if ((currentModule as any).modules) {
+            for (const submodule of (currentModule as any).modules) {
+                if (!visited.has(submodule)) {
+                    queue.push(submodule)
                 }
             }
         }
@@ -238,6 +252,8 @@ export default function ImvcStyleLoader(this: webpack.loader.LoaderContext, cont
     }
 
     setStyleInfo(compiler, resourcePath, styleInfo)
+
+    console.log('style info', resourcePath, styleInfo)
 
     return sourceCode
 }

@@ -253,7 +253,5 @@ export default function ImvcStyleLoader(this: webpack.loader.LoaderContext, cont
 
     setStyleInfo(compiler, resourcePath, styleInfo)
 
-    console.log('style info', resourcePath, styleInfo)
-
     return sourceCode
 }

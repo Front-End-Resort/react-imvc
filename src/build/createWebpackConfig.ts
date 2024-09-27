@@ -243,6 +243,7 @@ export default async function createWebpackConfig(
     // Save disk space when time isn't as important
     cacheCompression: isProd,
     compact: isProd,
+    sourceType: 'unambiguous',
   }
   let moduleRulesConfig: webpack.Rule[] = [
     // Disable require.ensure as it's not a standard language feature.
@@ -330,7 +331,7 @@ export default async function createWebpackConfig(
       use: [
         imvcStyleLoaderConfig,
         {
-          loader: "sass-loader",
+          loader: require.resolve('sass-loader'),
           options: typeof config.useSass !== 'boolean' ? config.useSass : {
             implementation: require("sass"),
           },

@@ -8,7 +8,7 @@ import bodyParser from 'body-parser'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import configBabel from '../config/babel'
-import shareRoot from '../middleware/shareRoot'
+import shareRoots from '../middleware/shareRoot'
 import * as setupDevEnv from '../build/setupDevEnv'
 import { readAssets } from '../build/assetsHelper'
 
@@ -20,13 +20,11 @@ export default async function createExpressApp(
   const app: express.Express = express()
 
   // handle basename
-  let list: string[] = Array.isArray(config.basename)
+  let basenameList: string[] = Array.isArray(config.basename)
     ? config.basename
     : [config.basename || '']
 
-  list.forEach((basename: string) => {
-    app.use(shareRoot(basename))
-  })
+  app.use(shareRoots(...basenameList))
 
   // handle helmet
   if (config.helmet) {
@@ -117,8 +115,15 @@ export default async function createExpressApp(
 
     // 开发模式用 webpack-dev-middleware 获取 assets
     app.use(async (req, res, next) => {
-      const assetsPath = path.join(config.root, config.publish, config.static, config.assetsPath)
-      const assetsJson = JSON.parse(res.locals.fs.readFileSync(assetsPath, 'utf-8'))
+      const assetsPath = path.join(
+        config.root,
+        config.publish,
+        config.static,
+        config.assetsPath
+      )
+      const assetsJson = JSON.parse(
+        res.locals.fs.readFileSync(assetsPath, 'utf-8')
+      )
 
       res.locals.assets = assetsJson
       next()
